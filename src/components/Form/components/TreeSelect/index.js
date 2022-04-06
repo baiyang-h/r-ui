@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { TreeSelect } from 'antd';
+import {setDefaultWidth} from "../../methods";
+import {CONTROL_DEFAULT_WIDTH} from "../../config";
 
 _TreeSelect.propTypes = {
   placeholder: PropTypes.string,
@@ -22,6 +24,7 @@ _TreeSelect.defaultProps = {
   placeholder: '请选择内容',
   treeData: [],
   allowClear: true,
+  width: CONTROL_DEFAULT_WIDTH
 }
 
 export default function _TreeSelect(props) {
@@ -36,6 +39,10 @@ export default function _TreeSelect(props) {
       treeData={props.treeData}
       treeDefaultExpandAll
       {...props}
+      style={{
+        // 设置默认宽度
+        minWidth: setDefaultWidth(props.width)
+      }}
       value={props.value}
       onChange={onChange}
     />

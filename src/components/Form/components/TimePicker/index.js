@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { TimePicker } from 'antd';
+import {setDefaultWidth} from "../../methods";
+import {CONTROL_DEFAULT_WIDTH} from "../../config";
 
 const { RangePicker } = TimePicker;
 
@@ -20,7 +22,7 @@ _TimePicker.propTypes = {
 }
 
 _TimePicker.defaultProps = {
-  placeholder: '请选择时间',
+  width: CONTROL_DEFAULT_WIDTH
 }
 
 export default function _TimePicker(props) {
@@ -34,6 +36,10 @@ export default function _TimePicker(props) {
   return <div className={`${props.prefix_form_control_name}-time-picker`}>
     <Com
       {...props}
+      style={{
+        // 设置默认宽度
+        minWidth: setDefaultWidth(props.width)
+      }}
       value={props.value}
       onChange={onChange} 
     />

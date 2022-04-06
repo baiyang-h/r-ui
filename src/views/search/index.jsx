@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
-import {TreeSelect, Input, Form, Select, Button} from 'antd';
-import RForm from '../../components/Form'
+import {TreeSelect, Input, Form, Select} from 'antd';
+import RSearch from '../../components/Search'
 
 const {Option} = Select
 const {SHOW_PARENT} = TreeSelect;
@@ -247,11 +247,6 @@ const config = [
     key: 'switch',
   },
   {
-    type: 'slider',
-    label: 'Slider',
-    key: 'slider',
-  },
-  {
     type: 'radioGroup',
     label: 'Radio.Group',
     key: 'radioGroup',
@@ -315,7 +310,7 @@ const rules = {
   ]
 }
 
-export default function MyForm() {
+export default function MySearch() {
 
   const formRef = useRef();
 
@@ -323,20 +318,12 @@ export default function MyForm() {
     console.log(values)
   }
 
-  function hangleCustomClick() {
-    const ref = formRef.current.getFormRef()
-    ref.validateFields().then(values => {
-      console.log(ref)
-      console.log(values)
-    })
-  }
-
   function onValuesChange(changedValues, allValues) {
     console.log(changedValues, allValues)
   }
 
   return <div>
-    <RForm
+    <RSearch
       ref={formRef}
       config={config}
       rules={rules}
@@ -345,6 +332,5 @@ export default function MyForm() {
       onFinish={onFinish}
       onValuesChange={onValuesChange}
     />
-    <Button type="primary" onClick={hangleCustomClick}>自定义提交按钮</Button>
   </div>
 }

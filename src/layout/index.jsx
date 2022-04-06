@@ -1,10 +1,8 @@
 import { Layout, Menu } from 'antd';
 import './index.scss'
 import { Routes, Route, Link } from "react-router-dom";
-import Home from '../views/home'
-import Form from '../views/form'
-import Table from '../views/table'
-import Modal from '../views/modal'
+
+import menu from '../router'
 
 const { Sider, Content } = Layout;
 
@@ -15,25 +13,23 @@ export default function _Layout() {
     }
 
     return <Layout className="layout">
-        <Sider className="sider">
-            <Menu
-                onClick={handleClick}
-                defaultSelectedKeys={['1']}
-                mode="inline"
-            >
-                <Menu.Item key="1"><Link to="/home">Home</Link></Menu.Item>
-                <Menu.Item key="2"><Link to="/form">Form</Link></Menu.Item>
-                <Menu.Item key="3"><Link to="/table">Table</Link></Menu.Item>
-                <Menu.Item key="4"><Link to="/modal">Modal</Link></Menu.Item>
-            </Menu>
-        </Sider>
+        {/*<Sider className="sider">*/}
+        {/*    <Menu*/}
+        {/*        onClick={handleClick}*/}
+        {/*        defaultSelectedKeys={['1']}*/}
+        {/*        mode="inline"*/}
+        {/*    >*/}
+        {/*        {*/}
+        {/*            menu.map((item, index) => <Menu.Item key={index}><Link to={item.path}>{item.name}</Link></Menu.Item>)*/}
+        {/*        }*/}
+        {/*    </Menu>*/}
+        {/*</Sider>*/}
         <Layout className="content">
             <Content>
                 <Routes>
-                    <Route exact path="/home" element={<Home />} />
-                    <Route path="/form" element={<Form />} />
-                    <Route path="/table" element={<Table />} />
-                    <Route path="/modal" element={<Modal />} />
+                    {
+                        menu.map((item, index) => <Route key={item.path} path={item.path} element={<item.component />} />)
+                    }
                 </Routes>
             </Content>
         </Layout>

@@ -1,3 +1,5 @@
+import addUnit from '../../libs/addUnit'
+
 // 设置初始化默认值
 export const setInitialValues = (config) => {
     let initialValues = {};
@@ -9,3 +11,6 @@ export const setInitialValues = (config) => {
     })
     return initialValues
 }
+
+// 设置默认宽度
+export const setDefaultWidth = (width) => width ? addUnit(width) : 'auto'

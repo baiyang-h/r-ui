@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Form, Button } from 'antd';
 import './index.scss';
 import { setInitialValues } from './methods'
-import { baseControlProps } from './props'
+import { baseControlProps } from './config'
 import { processWidthAndHeightProps, isPropsHasWOrH } from '../../libs/util'
 
 // 控件
@@ -43,7 +43,8 @@ export default class _Form extends Component {
   static propTypes = {
     name: PropTypes.string,
     config: PropTypes.array,
-    showBtn: PropTypes.bool,                 //  是否显示 提交、重置按钮组
+    rules: PropTypes.object,                  // 规则
+    showBtn: PropTypes.bool,                  //  是否显示 提交、重置按钮组
     showResetBtn: PropTypes.bool,             //  是否显示 重置按钮
     cancelBtnText: PropTypes.string,          // 取消按钮文字
     okBtnText: PropTypes.string,              // 确定按钮文字
@@ -54,6 +55,7 @@ export default class _Form extends Component {
   static defaultProps = {
     name: 'form',
     config: [],  // 表单配置项
+    rules: {},  // 表单规则配置项
     showBtn: false,
     showResetBtn: true,
     cancelBtnText: '取消',
@@ -74,6 +76,14 @@ export default class _Form extends Component {
     }
   }
 
+  // 得到 Form 表单 实例对象，可暴露给外部
+  getFormRef = () => {
+    return this.formRef.current
+  }
+
+  // 当传入 rules 属性的时候，通过key得到相应的 rules 规则
+  getRule = (key) => this.props.rules[key]
+
   // 重置
   onReset = () => {
     this.formRef.current.resetFields();
@@ -81,7 +91,6 @@ export default class _Form extends Component {
 
   // 提交
   onFinish = (values) => {
-    console.log(11, values)
     if(this.props.onFinish) {
       Object.keys(values).forEach(key => {
         if(Array.isArray(values[key]) && !values[key].length) {
@@ -100,7 +109,14 @@ export default class _Form extends Component {
   render() {
 
     const {
-      name, config, showBtn, showResetBtn, okBtnText, cancelBtnText
+      name,
+      config,
+      showBtn,
+      showResetBtn,
+      okBtnText,
+      cancelBtnText,
+      rules,
+      ...formProps // 其他在 form 上的属性
     } = this.props
 
     const { initialValues } = this.state;
@@ -110,6 +126,7 @@ export default class _Form extends Component {
       ref={this.formRef}
       name={name}
       initialValues={initialValues}
+      {...formProps}
       onFinish={this.onFinish}
       onValuesChange={this.onValuesChange}
     >
@@ -121,6 +138,7 @@ export default class _Form extends Component {
             label,
             key,
             attrs={},
+            rules=[],
             component,
             ...formItemProps
           } = item
@@ -149,6 +167,7 @@ export default class _Form extends Component {
               label={label}
               name={key}
               key={key}
+              rules={this.getRule(key) || rules}
               {...formItemProps}
           >
             <Com {...attrs} {...baseControlProps} />

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
+import {setDefaultWidth} from "../../methods";
+import {CONTROL_DEFAULT_WIDTH} from "../../config";
 
 _Input.propTypes = {
   allowClear: PropTypes.bool,
@@ -27,6 +29,7 @@ _Input.defaultProps = {
   maxLength: 9999999999999999,
   value: '',
   placeholder: '请输入内容',
+  width: CONTROL_DEFAULT_WIDTH
 }
 
 export default function _Input(props) {
@@ -46,6 +49,10 @@ export default function _Input(props) {
   return <div className={`${props.prefix_form_control_name}-input`}>
     <Input
       {...props}
+      style={{
+        // 设置默认宽度
+        minWidth: setDefaultWidth(props.width)
+      }}
       value={props.value}
       onChange={onChange}
     />

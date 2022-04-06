@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
+import {setDefaultWidth} from "../../methods";
+import {CONTROL_DEFAULT_WIDTH} from "../../config";
 
 const { Option } = Select;
 
@@ -29,6 +31,7 @@ _Select.defaultProps = {
   value: undefined,
   placeholder: '请选择内容',
   options: [],
+  width: CONTROL_DEFAULT_WIDTH
 }
 
 export default function _Select(props) {
@@ -40,6 +43,10 @@ export default function _Select(props) {
   return <div className={`${props.prefix_form_control_name}-select`}>
     <Select 
       {...props}
+      style={{
+        // 设置默认宽度
+        minWidth: setDefaultWidth(props.width)
+      }}
       value={props.value}
       onChange={onChange}
     >

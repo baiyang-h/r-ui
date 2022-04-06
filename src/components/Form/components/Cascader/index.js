@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { Cascader } from 'antd';
+import {setDefaultWidth} from "../../methods";
+import { CONTROL_DEFAULT_WIDTH } from '../../config'
 
 _Cascader.propTypes = {
   placeholder: PropTypes.string,
@@ -21,7 +23,8 @@ _Cascader.propTypes = {
 _Cascader.defaultProps = {
   placeholder: '请选择内容',
   options: [],
-  allowClear: true
+  allowClear: true,
+  width: CONTROL_DEFAULT_WIDTH
 }
 
 export default function _Cascader(props) {
@@ -33,6 +36,10 @@ export default function _Cascader(props) {
   return <div className={`${props.prefix_form_control_name}-cascader`}>
     <Cascader
         {...props}
+        style={{
+          // 设置默认宽度
+          minWidth: setDefaultWidth(props.width)
+        }}
         options={props.options}
         onChange={onChange}
     />
