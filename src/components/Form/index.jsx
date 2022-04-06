@@ -81,6 +81,7 @@ export default class _Form extends Component {
 
   // 提交
   onFinish = (values) => {
+    console.log(11, values)
     if(this.props.onFinish) {
       Object.keys(values).forEach(key => {
         if(Array.isArray(values[key]) && !values[key].length) {
@@ -156,9 +157,9 @@ export default class _Form extends Component {
       }
 
       {
-        showBtn && <Form.Item label=" " className="advanced-form-btns">
-          {showResetBtn && <Button onClick={this.onReset}>{ cancelBtnText }</Button>}
-          <Button type="primary" htmlType="submit">{ okBtnText }</Button>
+        showBtn && <Form.Item label="" className="advanced-form-btns">
+          {showResetBtn && <Button onClick={this.onReset} className="advanced-form-cancel-btn">{ cancelBtnText }</Button>}
+          <Button type="primary" htmlType="submit" className="advanced-form-submit-btn">{ okBtnText }</Button>
         </Form.Item>
       }
 
