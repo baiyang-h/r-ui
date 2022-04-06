@@ -1,8 +1,8 @@
-import Home from '../views/home'
-import Form from '../views/form'
-import Search from '../views/search'
-import Table from '../views/table'
-import Modal from '../views/modal'
+import Home from '@/views/home'
+import Form from '@/views/form'
+import Search from '@/views/search'
+import Table from '@/views/table'
+import Modal from '@/views/modal'
 
 export default [
     {

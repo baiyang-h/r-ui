@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { TimePicker } from 'antd';
-import {setDefaultWidth} from "../../methods";
-import {CONTROL_DEFAULT_WIDTH} from "../../config";
+import {setDefaultWidth} from "@/components/Form/methods";
+import {CONTROL_DEFAULT_WIDTH} from "@/components/Form/config";
 
 const { RangePicker } = TimePicker;
 
@@ -41,7 +41,7 @@ export default function _TimePicker(props) {
         minWidth: setDefaultWidth(props.width)
       }}
       value={props.value}
-      onChange={onChange} 
+      onChange={onChange}
     />
   </div>
 }

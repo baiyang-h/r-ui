@@ -1,4 +1,4 @@
-import addUnit from '../../libs/addUnit'
+import addUnit from '@/libs/addUnit'
 
 // 设置初始化默认值
 export const setInitialValues = (config) => {

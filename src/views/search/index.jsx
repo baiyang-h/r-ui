@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {TreeSelect, Input, Form, Select} from 'antd';
-import RSearch from '../../components/Search'
+import RSearch from '@/components/Search'
 
 const {Option} = Select
 const {SHOW_PARENT} = TreeSelect;
@@ -28,12 +28,6 @@ const config = [
     type: 'input',
     label: '文本框',
     key: 'text',
-    rules: [
-      {
-        required: true,
-        message: '请输入值'
-      }
-    ],
     attrs: {
       reg: /\d/,
       maxLength: 4,
@@ -62,28 +56,6 @@ const config = [
     key: 'select',
     attrs: {
       defaultValue: 1,
-      options: [
-        {
-          label: 'One',
-          value: 1
-        },
-        {
-          label: 'Two',
-          value: 2
-        },
-        {
-          label: 'Three',
-          value: 3
-        }
-      ]
-    },
-  },
-  {
-    type: 'select',
-    label: '多选选择框',
-    key: 'select2',
-    attrs: {
-      mode: 'multiple',
       options: [
         {
           label: 'One',
@@ -169,79 +141,6 @@ const config = [
     }
   },
   {
-    type: 'treeselect',
-    label: '树形选择器',
-    key: 'treeselect',
-    attrs: {
-      treeData: [
-        {
-          title: 'Node1',
-          value: '0-0',
-          children: [
-            {
-              title: 'Child Node1',
-              value: '0-0-1',
-            },
-            {
-              title: 'Child Node2',
-              value: '0-0-2',
-            },
-          ],
-        },
-        {
-          title: 'Node2',
-          value: '0-1',
-        },
-      ]
-    }
-  },
-  {
-    type: 'treeselect',
-    label: '树形复选框选择器',
-    key: 'treeselect2',
-    attrs: {
-      treeCheckable: true,
-      showCheckedStrategy: SHOW_PARENT,
-      value: ['0-1-1'],
-      treeData: [
-        {
-          title: 'Node1',
-          value: '0-0',
-          key: '0-0',
-          children: [
-            {
-              title: 'Child Node1',
-              value: '0-0-0',
-              key: '0-0-0',
-            },
-          ],
-        },
-        {
-          title: 'Node2',
-          value: '0-1',
-          key: '0-1',
-          children: [
-            {
-              title: 'Child Node3',
-              value: '0-1-0',
-              key: '0-1-0',
-            },
-            {
-              title: 'Child Node4',
-              value: '0-1-1',
-              key: '0-1-1',
-            },
-            {
-              title: 'Child Node5',
-              value: '0-1-2',
-              key: '0-1-2',
-            },
-          ],
-        },
-      ]
-    }
-  },
-  {
     type: 'switch',
     label: 'Switch',
     key: 'switch',
@@ -295,21 +194,6 @@ const config = [
   },
 ]
 
-const rules = {
-  phone: [
-    {
-      required: true,
-      message: '请输入值'
-    }
-  ],
-  select: [
-    {
-      required: true,
-      message: '请输入值'
-    }
-  ]
-}
-
 export default function MySearch() {
 
   const formRef = useRef();
@@ -326,7 +210,6 @@ export default function MySearch() {
     <RSearch
       ref={formRef}
       config={config}
-      rules={rules}
       {...formItemLayout}
       showBtn={true}
       onFinish={onFinish}

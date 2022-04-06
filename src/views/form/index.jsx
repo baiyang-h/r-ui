@@ -1,12 +1,12 @@
 import React, {useRef} from 'react';
 import {TreeSelect, Input, Form, Select, Button} from 'antd';
-import RForm from '../../components/Form'
+import RForm from '@/components/Form'
 
 const {Option} = Select
 const {SHOW_PARENT} = TreeSelect;
 
 const formItemLayout = {
-  labelCol: {span: 8},
+  labelCol: {span: 6},
   wrapperCol: {span: 16},
 }
 

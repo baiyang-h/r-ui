@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
-import { setDefaultWidth } from '../../methods'
-import {CONTROL_DEFAULT_WIDTH} from "../../config";
+import { setDefaultWidth } from '@/components/Form/methods'
+import {CONTROL_DEFAULT_WIDTH} from "@/components/Form/config";
 
 _InputNumber.propTypes = {
     width: PropTypes.oneOfType([

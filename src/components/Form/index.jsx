@@ -4,7 +4,7 @@ import { Form, Button } from 'antd';
 import './index.scss';
 import { setInitialValues } from './methods'
 import { baseControlProps } from './config'
-import { processWidthAndHeightProps, isPropsHasWOrH } from '../../libs/util'
+import { processWidthAndHeightProps, isPropsHasWOrH } from '@/libs/util'
 
 // 控件
 import Input from './components/Input';

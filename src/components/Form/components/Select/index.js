@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'antd';
-import {setDefaultWidth} from "../../methods";
-import {CONTROL_DEFAULT_WIDTH} from "../../config";
+import {setDefaultWidth} from "@/components/Form/methods";
+import {CONTROL_DEFAULT_WIDTH} from "@/components/Form/config";
 
 const { Option } = Select;
 
@@ -41,7 +41,7 @@ export default function _Select(props) {
   }
 
   return <div className={`${props.prefix_form_control_name}-select`}>
-    <Select 
+    <Select
       {...props}
       style={{
         // 设置默认宽度

@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { DatePicker } from 'antd';
-import {setDefaultWidth} from "../../methods";
-import {CONTROL_DEFAULT_WIDTH} from "../../config";
+import {setDefaultWidth} from "@/components/Form/methods";
+import {CONTROL_DEFAULT_WIDTH} from "@/components/Form/config";
 
 const { RangePicker } = DatePicker;
 
@@ -34,7 +34,7 @@ export default function _DatePicker(props) {
   const Com = props.type !== 'rangepicker' ? DatePicker : RangePicker
 
   return <div className={`${props.prefix_form_control_name}-date-picker`}>
-    <Com 
+    <Com
       {...props}
       style={{
         // 设置默认宽度
