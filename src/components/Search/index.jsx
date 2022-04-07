@@ -1,7 +1,6 @@
 import {Component} from "react";
 import Form from '../Form'
 import PropTypes from "prop-types";
-import './index.scss'
 
 export default class Search extends Component {
 

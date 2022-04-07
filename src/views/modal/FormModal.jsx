@@ -1,23 +1,6 @@
-import React, {useRef} from 'react';
-import {TreeSelect, Input, Form, Select, Button} from 'antd';
-import RForm from '@/components/Form'
-
-const {Option} = Select
-const {SHOW_PARENT} = TreeSelect;
-
-const formItemLayout = {
-  labelCol: {span: 6},
-  wrapperCol: {span: 16},
-}
-
-const prefixSelector = (
-  <Form.Item noStyle>
-    <Select style={{width: 70}} defaultValue="86">
-      <Option value="86">+86</Option>
-      <Option value="87">+87</Option>
-    </Select>
-  </Form.Item>
-);
+import React, { useState } from 'react';
+import FormModal from '@/components/Modal/FormModal'
+import {Button, Input} from "antd";
 
 function MyInput(props) {
   return <Input {...props} />
@@ -43,18 +26,11 @@ const config = [
     type: 'number',
     label: '数字输入框',
     key: 'inputNumber',
-    attrs: {
-      defaultValue: 111,   // 优先 defaultValue， value 也可以， 内部做了处理
-      value: 2
-    }
   },
   {
     type: 'input',
     label: '手机号',
     key: 'phone',
-    attrs: {
-      addonBefore: prefixSelector
-    }
   },
   {
     type: 'select',
@@ -201,7 +177,6 @@ const config = [
     key: 'treeselect2',
     attrs: {
       treeCheckable: true,
-      showCheckedStrategy: SHOW_PARENT,
       value: ['0-1-1'],
       treeData: [
         {
@@ -237,6 +212,63 @@ const config = [
               key: '0-1-2',
             },
           ],
+        },
+        {
+          type: 'switch',
+          label: 'Switch',
+          key: 'switch',
+        },
+        {
+          type: 'slider',
+          label: 'Slider',
+          key: 'slider',
+        },
+        {
+          type: 'radioGroup',
+          label: 'Radio.Group',
+          key: 'radioGroup',
+          attrs: {
+            options: [
+              {
+                label: 'One',
+                value: 1
+              },
+              {
+                label: 'Two',
+                value: 2
+              },
+              {
+                label: 'Three',
+                value: 3
+              }
+            ]
+          }
+        },
+        {
+          type: 'checkbox',
+          label: 'Checkbox',
+          key: 'checkbox',
+        },
+        {
+          type: 'checkboxGroup',
+          label: 'CheckboxGroup',
+          key: 'checkboxGroup',
+          attrs: {
+            options: [
+              { label: 'Apple', value: 'Apple' },
+              { label: 'Pear', value: 'Pear' },
+              { label: 'Orange', value: 'Orange' },
+            ]
+          }
+        },
+        {
+          type: 'custom',
+          label: '自定义',
+          key: 'custom',
+          attrs: {
+            defaultValue: 123,
+          },
+          component: MyInput
         },
       ]
     }
@@ -283,9 +315,9 @@ const config = [
     key: 'checkboxGroup',
     attrs: {
       options: [
-        {label: 'Apple', value: 'Apple'},
-        {label: 'Pear', value: 'Pear'},
-        {label: 'Orange', value: 'Orange'},
+        { label: 'Apple', value: 'Apple' },
+        { label: 'Pear', value: 'Pear' },
+        { label: 'Orange', value: 'Orange' },
       ]
     }
   },
@@ -300,72 +332,39 @@ const config = [
   },
 ]
 
-const rules = {
-  phone: [
-    {
-      required: true,
-      message: '请输入值'
-    }
-  ],
-  select: [
-    {
-      required: true,
-      message: '请输入值'
-    }
-  ]
-}
+function App() {
 
-export default function MyForm() {
+  let [visible, setVisible] = useState(false)
+  let [confirmLoading, setConfirmLoading] = useState(false)
 
-  const formRef = useRef();
-
-  function onFinish(values) {
-    console.log(values)
-  }
-
-  function hangleCustomClick() {
-    const ref = formRef.current.getFormRef()
-    ref.validateFields().then(values => {
-      console.log(ref)
+  function onOk(values) {
+    setConfirmLoading(true);
+    setTimeout(() => {
       console.log(values)
-    })
+      setVisible(false);
+      setConfirmLoading(false);
+    }, 1000)
   }
 
-  function setFormValue() {
-    const ref = formRef.current.getFormRef()
-    ref.setFieldsValue({
-      text: '111',
-      inputNumber: 222,
-      phone: 134893845532,
-      select: 2,
-      select2: [1, 2],
-      cascader: ['zhejiang', 'jiangsu'],
-      treeselect: '0-1',
-      switch: true,
-      radioGroup: 3,
-      checkbox: true,
-      checkboxGroup: ['Apple', 'Orange'],
-      custom: 777
-    })
+  function onCancel() {
+    setVisible(false);
+    setConfirmLoading(false);
   }
 
-  function onValuesChange(changedValues, allValues) {
-    console.log(changedValues, allValues)
-  }
-
-  return <div>
-    <div style={{marginBottom: '20px'}}>
-      <Button type="primary" onClick={setFormValue} style={{ marginRight: '20px' }}>自定义设置</Button>
-      <Button type="primary" onClick={hangleCustomClick}>自定义提交按钮</Button>
+  return (
+    <div className="App">
+      <Button type="primary" onClick={() => setVisible(true)}>Open Modal</Button>
+      <FormModal
+        width={850}
+        title={'这是FormModal'}
+        confirmLoading={confirmLoading}
+        visible={visible}
+        config={config}
+        onOk={onOk}
+        onCancel={onCancel}
+      />
     </div>
-    <RForm
-      ref={formRef}
-      config={config}
-      rules={rules}
-      {...formItemLayout}
-      showBtn={true}
-      onFinish={onFinish}
-      onValuesChange={onValuesChange}
-    />
-  </div>
-}
+  );
+};
+
+export default App;

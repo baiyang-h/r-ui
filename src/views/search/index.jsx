@@ -3,7 +3,6 @@ import {TreeSelect, Input, Form, Select} from 'antd';
 import RSearch from '@/components/Search'
 
 const {Option} = Select
-const {SHOW_PARENT} = TreeSelect;
 
 const formItemLayout = {
   labelCol: {span: 8},
@@ -31,7 +30,13 @@ const config = [
     attrs: {
       reg: /\d/,
       maxLength: 4,
-    }
+    },
+    rules: [
+      {
+        required: true,
+        message: '请输入值'
+      }
+    ],
   },
   {
     type: 'number',

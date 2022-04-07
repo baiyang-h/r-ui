@@ -42,7 +42,7 @@ export default class _Form extends Component {
 
   static propTypes = {
     name: PropTypes.string,
-    config: PropTypes.array,
+    config: PropTypes.array.isRequired,
     rules: PropTypes.object,                  // 规则
     showBtn: PropTypes.bool,                  //  是否显示 提交、重置按钮组
     showResetBtn: PropTypes.bool,             //  是否显示 重置按钮
@@ -122,7 +122,7 @@ export default class _Form extends Component {
     const { initialValues } = this.state;
 
     return <Form
-      className="advanced-form"
+      id="advanced-form"
       ref={this.formRef}
       name={name}
       initialValues={initialValues}

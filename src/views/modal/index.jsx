@@ -1,5 +1,7 @@
+import FormModalExample from './FormModal'
+
 export default function Modal() {
     return <div>
-        Modal
+        <FormModalExample />
     </div>
 }
