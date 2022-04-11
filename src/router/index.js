@@ -3,6 +3,7 @@ import Form from '@/views/form'
 import Search from '@/views/search'
 import Table from '@/views/table'
 import Modal from '@/views/modal'
+import FormCreate from "@/views/form-create";
 
 export default [
     {
@@ -29,5 +30,10 @@ export default [
         path: '/modal',
         name: 'Modal',
         component: Modal
+    },
+    {
+        path: '/formCreate',
+        name: 'FormCreate',
+        component: FormCreate
     },
 ]

@@ -13,16 +13,16 @@ export default function _Layout() {
     }
 
     return <Layout className="layout">
-        <Sider className="sider">
-            <Menu
-                onClick={handleClick}
-                mode="inline"
-            >
-                {
-                    menu.map((item, index) => <Menu.Item key={index}><Link to={item.path}>{item.name}</Link></Menu.Item>)
-                }
-            </Menu>
-        </Sider>
+        {/*<Sider className="sider">*/}
+        {/*    <Menu*/}
+        {/*        onClick={handleClick}*/}
+        {/*        mode="inline"*/}
+        {/*    >*/}
+        {/*        {*/}
+        {/*            menu.map((item, index) => <Menu.Item key={index}><Link to={item.path}>{item.name}</Link></Menu.Item>)*/}
+        {/*        }*/}
+        {/*    </Menu>*/}
+        {/*</Sider>*/}
         <Layout className="content">
             <Content>
                 <Routes>
