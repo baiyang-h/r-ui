@@ -6,7 +6,7 @@ const {Option} = Select
 const {SHOW_PARENT} = TreeSelect;
 
 const formItemLayout = {
-  labelCol: {span: 6},
+  labelCol: {span: 4},
   wrapperCol: {span: 16},
 }
 

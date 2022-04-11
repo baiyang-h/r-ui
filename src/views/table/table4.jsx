@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
-import {Table, Input, InputNumber, Popconfirm, Form} from 'antd';
+import { Input, InputNumber, Form} from 'antd';
+import RTable from '@/components/Table'
+
 // 数据
 const originData = [];
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 10; i++) {
   originData.push({
     key: i.toString(),
     name: `Edrward ${i}`,
@@ -147,7 +149,7 @@ const EditableTable = () => {
   });
   return (
     <Form form={form} component={false}>
-      <Table
+      <RTable
         components={{
           body: {
             cell: EditableCell,
@@ -157,9 +159,7 @@ const EditableTable = () => {
         dataSource={data}
         columns={mergedColumns}
         rowClassName="editable-row"
-        pagination={{
-          onChange: cancel,
-        }}
+        pagination={false}
       />
     </Form>
   );

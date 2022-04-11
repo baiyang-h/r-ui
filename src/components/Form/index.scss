@@ -1,35 +1,11 @@
-#advanced-form {
+.advanced-form {
   &.ant-form-inline {
-
     .ant-form-item {
       margin-bottom: 24px;
     }
-
     .ant-form-item-with-help {
       margin-bottom: 0;
     }
-
-    // 时间 time 选择器、日期选择器
-    .ant-picker {
-      width: 100%;
-    }
-
-  }
-  .ant-form-item {
-    width: 375px;
-    .ant-form-item-label {
-      flex: 1;
-    }
-  }
-
-  // input 输入框
-  .ant-input-affix-wrapper {
-    width: 100%;
-  }
-
-  // 下拉框
-  .ant-select {
-    width: 100%;
   }
 
   // 按钮部分

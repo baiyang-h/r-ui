@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useRef, useContext} from 'react';
-import {Table, Input, Form} from 'antd';
+import { Input, Form} from 'antd';
+import RTable from '@/components/Table'
 import './index.scss'
 const EditableContext = React.createContext();
 const _columns = [
@@ -144,7 +145,7 @@ function EditableTable() {
     setSataSource(dataSource)
   }, [])
   return (
-    <Table
+    <RTable
       rowClassName={() => 'editable-row'}
       columns={columns}
       dataSource={dataSource}

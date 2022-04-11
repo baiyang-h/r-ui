@@ -18,7 +18,8 @@ _InputNumber.propTypes = {
 
 _InputNumber.defaultProps = {
     value: undefined,
-    width: CONTROL_DEFAULT_WIDTH
+    width: CONTROL_DEFAULT_WIDTH,
+    placeholder: '请输入数字'
 }
 
 export default function _InputNumber(props) {

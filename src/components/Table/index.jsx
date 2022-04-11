@@ -2,6 +2,7 @@ import { Component } from 'react'
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import { PAGE_POSITION, DEFAULT_PAGESIZE, PAGESIZE_OPTIONS } from './constant'
+import classNames from 'classnames';
 
 export default class _Table extends Component {
 
@@ -59,26 +60,27 @@ export default class _Table extends Component {
       ..._props
     } = this.props;
 
-    pagination.current = pageManage.current;
-    pagination.pageSize = pageManage.pageSize;
-    pagination.total = pageManage.total;
-    pagination.showTotal = () => `共 ${pageManage.total} 条`;
-    if(onChange) {
-      pagination.onChange = onChange
-    }
-    if(onShowSizeChange) {
-      pagination.onShowSizeChange = onShowSizeChange
+    if(pagination !== false) {
+      pagination.current = pageManage.current;
+      pagination.pageSize = pageManage.pageSize;
+      pagination.total = pageManage.total;
+      pagination.showTotal = () => `共 ${pageManage.total} 条`;
+      if(onChange) {
+        pagination.onChange = onChange
+      }
+      if(onShowSizeChange) {
+        pagination.onShowSizeChange = onShowSizeChange
+      }
     }
 
-    return <div className="advanced-table">
-      <Table
-        {..._props}
-        rowKey={rowKey}
-        columns={columns}
-        dataSource={dataSource}
-        pagination={pagination}
-      />
-    </div>
+    return <Table
+      {..._props}
+      className={classNames('advanced-table', _props.className)}
+      rowKey={rowKey}
+      columns={columns}
+      dataSource={dataSource}
+      pagination={pagination}
+    />
   }
 
 }

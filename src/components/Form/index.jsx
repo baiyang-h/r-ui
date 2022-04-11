@@ -5,6 +5,7 @@ import './index.scss';
 import { setInitialValues } from './methods'
 import { baseControlProps } from './config'
 import { processWidthAndHeightProps, isPropsHasWOrH } from '@/libs/util'
+import classNames from 'classnames'
 
 // 控件
 import Input from './components/Input';
@@ -122,11 +123,11 @@ export default class _Form extends Component {
     const { initialValues } = this.state;
 
     return <Form
-      id="advanced-form"
+      {...formProps}
+      className={classNames('advanced-form', formProps.className)}
       ref={this.formRef}
       name={name}
       initialValues={initialValues}
-      {...formProps}
       onFinish={this.onFinish}
       onValuesChange={this.onValuesChange}
     >
@@ -176,7 +177,7 @@ export default class _Form extends Component {
       }
 
       {
-        showBtn && <Form.Item label="" className="advanced-form-btns">
+        showBtn && <Form.Item label=" " className="advanced-form-btns">
           {showResetBtn && <Button onClick={this.onReset} className="advanced-form-cancel-btn">{ cancelBtnText }</Button>}
           <Button type="primary" htmlType="submit" className="advanced-form-submit-btn">{ okBtnText }</Button>
         </Form.Item>
