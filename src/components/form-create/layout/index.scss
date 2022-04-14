@@ -1,4 +1,8 @@
 .form-create-layout {
   height: 100%;
   background: #fff;
+  overflow-y: auto;
+  .drag-items {
+    min-height: 100%;
+  }
 }
