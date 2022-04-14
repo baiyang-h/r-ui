@@ -6,38 +6,7 @@ import { setInitialValues } from './methods'
 import { baseControlProps } from './config'
 import { processWidthAndHeightProps, isPropsHasWOrH } from '@/libs/util'
 import classNames from 'classnames'
-
-// 控件
-import Input from './components/input';
-import InputNumber from './components/input-number'
-import Select from './components/select';
-import TimePicker from './components/time-picker';
-import DatePicker from './components/date-picker';
-import Cascader from './components/cascader';
-import TreeSelect from './components/tree-select';
-import Switch from './components/switch';
-import Slider from './components/slider';
-import Custom from './components/custom';
-import RadioGroup from './components/radio-group';
-import Checkbox from './components/checkbox'
-import CheckboxGroup from './components/checkbox/CheckboxGroup'
-
-// 控件
-const Control = {
-  input: Input,                     // input
-  number: InputNumber,              // 数字输入框
-  select: Select,                   // select
-  time: TimePicker,                 // 时间选择器
-  date: DatePicker,                 // 日期选择器
-  cascader: Cascader,               // 级联选择器
-  treeselect: TreeSelect,           // 树选择器
-  switch: Switch,                   // switch 选择
-  slider: Slider,                   // 滑块
-  radiogroup: RadioGroup,                // 单选框组
-  checkbox: Checkbox,               // 复选框
-  checkboxgroup: CheckboxGroup,     // 复选框组
-  custom: Custom,                   // 自定义选择器
-}
+import FormControl from './components/control'
 
 export default class _Form extends Component {
 
@@ -156,13 +125,7 @@ export default class _Form extends Component {
             attrs.style = {...attrs.style, ...widthAndHeightStyles}
           }
 
-          // 根据 type 传入的类型 判断 什么表单组件
-          let Com;
-          if(type.toLowerCase() === 'custom') { // 如果是自定义组件
-            Com = component || Control[type.toLowerCase()]
-          } else {
-            Com = Control[type.toLowerCase()]
-          }
+          const typeLowerCase = type.toLowerCase()
 
           return <Form.Item
               label={label}
@@ -171,7 +134,12 @@ export default class _Form extends Component {
               rules={this.getRule(key) || rules}
               {...formItemProps}
           >
-            <Com {...attrs} {...baseControlProps} />
+            <FormControl
+              {...attrs}
+              {...baseControlProps}
+              type={typeLowerCase}
+              render={typeLowerCase === 'custom' ? () => component : null}
+            />
           </Form.Item>
         })
       }
