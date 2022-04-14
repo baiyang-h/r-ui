@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FormModal from '@/components/Modal/FormModal'
+import FormModal from '@/packages/modal/form-modal'
 import {Button, Input} from "antd";
 import './index.scss'
 
@@ -195,7 +195,7 @@ const config = [
   },
   {
     type: 'checkbox',
-    label: 'Checkbox',
+    label: 'checkbox',
     key: 'checkbox',
   },
   {

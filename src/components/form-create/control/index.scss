@@ -1,0 +1,21 @@
+.form-create-controls {
+  height: 100%;
+  background: #fff;
+  #items {
+    height: 100%;
+    padding-left: 20px;
+    padding-top: 20px;
+    .item {
+      display: inline-block;
+      border: 1px solid #e9ebef;
+      width: 100px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      cursor: move;
+      user-select: none;
+    }
+  }
+}

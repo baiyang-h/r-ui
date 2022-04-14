@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef, useContext} from 'react';
 import { Input, Form} from 'antd';
-import RTable from '@/components/Table'
+import RTable from '@/packages/table'
 import './index.scss'
 const EditableContext = React.createContext();
 const _columns = [

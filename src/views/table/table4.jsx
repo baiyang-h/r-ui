@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { Input, InputNumber, Form} from 'antd';
-import RTable from '@/components/Table'
+import RTable from '@/packages/table'
 
 // 数据
 const originData = [];

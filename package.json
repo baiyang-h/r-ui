@@ -43,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@types/sortablejs": "^1.10.7",
     "prop-types": "^15.8.1"
   }
 }

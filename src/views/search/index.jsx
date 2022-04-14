@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {TreeSelect, Input, Form, Select} from 'antd';
-import RSearch from '@/components/Search'
+import RSearch from '@/packages/search'
 
 const {Option} = Select
 
@@ -147,7 +147,7 @@ const config = [
   },
   {
     type: 'switch',
-    label: 'Switch',
+    label: 'switch',
     key: 'switch',
   },
   {
@@ -173,7 +173,7 @@ const config = [
   },
   {
     type: 'checkbox',
-    label: 'Checkbox',
+    label: 'checkbox',
     key: 'checkbox',
   },
   {

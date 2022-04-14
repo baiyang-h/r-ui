@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
 import {TreeSelect, Input, Form, Select, Button} from 'antd';
-import RForm from '@/components/Form'
+import RForm from '@/packages/form'
 
 const {Option} = Select
 const {SHOW_PARENT} = TreeSelect;
@@ -243,12 +243,12 @@ const config = [
   },
   {
     type: 'switch',
-    label: 'Switch',
+    label: 'switch',
     key: 'switch',
   },
   {
     type: 'slider',
-    label: 'Slider',
+    label: 'slider',
     key: 'slider',
   },
   {
@@ -274,7 +274,7 @@ const config = [
   },
   {
     type: 'checkbox',
-    label: 'Checkbox',
+    label: 'checkbox',
     key: 'checkbox',
   },
   {

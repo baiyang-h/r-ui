@@ -1,5 +1,5 @@
 import React from 'react';
-import RTable from '@/components/Table'
+import RTable from '@/packages/table'
 
 const columns = [
   { title: '序号', dataIndex: 'key', key: 'key'},
