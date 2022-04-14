@@ -12,7 +12,7 @@ function Layout(props) {
       list={list}
       setList={setList}
       animation={150}
-      group={{ name: "form-create", pull: "clone" }}
+      group={{ name: "form-create" }}
     >
       {list.map(item => (
         <div key={item.id}>{item.name}</div>
