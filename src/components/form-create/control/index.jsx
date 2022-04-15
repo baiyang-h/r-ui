@@ -1,9 +1,26 @@
 import { ReactSortable } from "react-sortablejs";
 import './index.scss'
 import {useState} from "react";
-import { list as _list, createId } from '../util'
 
-function Controls(props) {
+const _list = () => [
+  { key: 'Text', name: '文本', attr: {} },
+  { key: 'Input', name: '输入框', attr: {} },
+  { key: 'InputNumber', name: '数字输入框', attr: {} },
+  { key: 'Select', name: '选择器', attr: {} },
+  { key: 'Radio', name: '单选框', attr: {} },
+  { key: 'Checkbox', name: '复选框', attr: {} },
+  { key: 'CheckboxGroup', name: '复选框组', attr: {} },
+  { key: 'Switch', name: '开关', attr: {} },
+  { key: 'TimePicker', name: '时间选择器', attr: {} },
+  { key: 'DatePicker', name: '日期选择器', attr: {} },
+  { key: 'Rate', name: '评分', attr: {} },
+  { key: 'Slider', name: '滑动输入条', attr: {} },
+  { key: 'TreeSelect', name: '树选择', attr: {} },
+  { key: 'Cascader', name: '级联选择', attr: {} },
+  { key: 'Upload', name: '上传', attr: {} },
+];
+
+function FormControls() {
 
   const [list, setList] = useState(_list);
 
@@ -14,14 +31,13 @@ function Controls(props) {
       setList={setList}
       animation={150}
       group={{ name: "form-create", pull: "clone", put: false }}
-      clone={item => ({ ...item, id: createId() })}
       sort={false}
     >
       {list.map(item => (
-        <div key={item.id} className="item">{ item.name }</div>
+        <div key={item.key} className="item">{ item.name }</div>
       ))}
     </ReactSortable>
   </div>
 }
 
-export default Controls
+export default FormControls

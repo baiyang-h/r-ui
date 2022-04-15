@@ -5,7 +5,7 @@ import './index.scss'
 
 const { TabPane } = Tabs;
 
-function ControlConfig(props) {
+function FormSetController(props) {
 
   function onChange(key) {
     console.log(key)
@@ -23,4 +23,4 @@ function ControlConfig(props) {
   </div>
 }
 
-export default ControlConfig
+export default FormSetController

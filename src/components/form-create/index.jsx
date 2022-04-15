@@ -1,7 +1,7 @@
 import { Layout, Button } from 'antd';
-import Controls from './control'
-import FormLayout from './layout'
-import ControlConfig from './config'
+import FormControls from './control'
+import FormDragLayout from './layout'
+import FormSetController from './set'
 import './index.scss'
 
 const { Sider, Content } = Layout;
@@ -18,9 +18,9 @@ function FormCreate(props) {
       </div>
     </div>
     <Layout>
-      <Sider width="260"><Controls /></Sider>
-      <Content><FormLayout /></Content>
-      <Sider width="320"><ControlConfig /></Sider>
+      <Sider width="260"><FormControls /></Sider>
+      <Content><FormDragLayout /></Content>
+      <Sider width="320"><FormSetController /></Sider>
     </Layout>
   </div>
 }

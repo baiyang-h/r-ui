@@ -1,10 +1,20 @@
 import { useState } from 'react'
 import { ReactSortable } from "react-sortablejs";
+import uniqueId from 'lodash/uniqueId';
 import './index.scss'
 
-function Layout(props) {
+function FormDragLayout(props) {
 
   const [list, setList] = useState([]);
+
+  const loop = (arr) => arr.map((item, index) => {
+
+    if(item.children) {
+
+    } else {
+      return <div key={ index }>{ item.name }</div>
+    }
+  })
 
   return <div className="form-create-layout">
     <ReactSortable
@@ -14,11 +24,9 @@ function Layout(props) {
       animation={150}
       group={{ name: "form-create" }}
     >
-      {list.map(item => (
-        <div key={item.id}>{item.name}</div>
-      ))}
+      { loop(list) }
     </ReactSortable>
   </div>
 }
 
-export default Layout
+export default FormDragLayout
