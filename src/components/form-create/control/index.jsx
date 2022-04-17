@@ -2,7 +2,7 @@ import { ReactSortable } from "react-sortablejs";
 import './index.scss'
 import {useState} from "react";
 
-const _list = () => [
+export const sourceData = [
   { key: 'Text', name: '文本', attr: {} },
   { key: 'Input', name: '输入框', attr: {} },
   { key: 'InputNumber', name: '数字输入框', attr: {} },
@@ -18,11 +18,12 @@ const _list = () => [
   { key: 'TreeSelect', name: '树选择', attr: {} },
   { key: 'Cascader', name: '级联选择', attr: {} },
   { key: 'Upload', name: '上传', attr: {} },
-];
+  { key: 'Container', name: '容器', attr: { border:'1px solid red' } },
+]
 
 function FormControls() {
 
-  const [list, setList] = useState(_list);
+  const [list, setList] = useState(sourceData);
 
   return <div className="form-create-controls">
     <ReactSortable
@@ -34,7 +35,13 @@ function FormControls() {
       sort={false}
     >
       {list.map(item => (
-        <div key={item.key} className="item">{ item.name }</div>
+        <div
+          key={item.key}
+          className="item"
+          data-type={item.key}
+        >
+          { item.name }
+        </div>
       ))}
     </ReactSortable>
   </div>
