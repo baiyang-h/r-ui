@@ -1,8 +1,9 @@
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {ReactSortable} from "react-sortablejs";
 import _, { uniqueId } from 'lodash';
-import './index.scss'
-import { sourceData } from '../control'
+import './index.scss';
+import { sourceData } from '../control';
+import { Form } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup } from '@/packages/form/components'
 
 const Controls = {
@@ -21,9 +22,11 @@ const Controls = {
   checkboxgroup: CheckboxGroup,
 }
 
-function FormDragLayout(props) {
+function DragFormLayout(props) {
 
   const [list, setList] = useState([]);
+
+  const [form] = Form.useForm();
 
   // const sortableOption = {
   //   animation: 150,
@@ -56,7 +59,12 @@ function FormDragLayout(props) {
     } else {
       console.log(11, item)
       const Com = Controls[item.type.toLowerCase()]
-      return <div key={index}><Com {...item.attr} /></div>
+      return <Form.Item
+        key={index}
+        name={item.id}
+      >
+        <Com {...item.attr} />
+      </Form.Item>
     }
   })
 
@@ -80,20 +88,30 @@ function FormDragLayout(props) {
     console.log('Update', evt)
   }
 
-  return <div className="form-create-layout">
-    <ReactSortable
-      className="drag-items"
-      animation={150}
-      group={{name: "form-create"}}
-      clone={item => ({ ...item, id: uniqueId() })}
-      list={list}
-      setList={setList}
-      onAdd={sortableAdd}
-      onUpdate={sortableUpdate}
+  return <div className="drag-form-layout">
+    <Form
+      className="drag-form"
+      form={form}
+      name="drag-form"
     >
-      {loop(list)}
-    </ReactSortable>
+      <ReactSortable
+        className="drag-items"
+        animation={150}
+        group={{name: "form-create"}}
+        clone={item => ({ ...item, id: uniqueId('field_') })}
+        list={list}
+        setList={setList}
+        onAdd={sortableAdd}
+        onUpdate={sortableUpdate}
+      >
+        {loop(list)}
+      </ReactSortable>
+    </Form>
   </div>
 }
 
-export default FormDragLayout
+function MyInput(props) {
+  console.log(props)
+}
+
+export default DragFormLayout
