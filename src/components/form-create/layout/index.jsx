@@ -3,6 +3,23 @@ import {ReactSortable} from "react-sortablejs";
 import _, { uniqueId } from 'lodash';
 import './index.scss'
 import { sourceData } from '../control'
+import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup } from '@/packages/form/components'
+
+const Controls = {
+  text: Text,
+  input: Input,
+  number: InputNumber,
+  select: Select,
+  time: TimePicker,
+  date: DatePicker,
+  cascader: Cascader,
+  treeselect: TreeSelect,
+  switch: Switch,
+  slider: Slider,
+  radiogroup: RadioGroup,
+  checkbox: Checkbox,
+  checkboxgroup: CheckboxGroup,
+}
 
 function FormDragLayout(props) {
 
@@ -37,7 +54,9 @@ function FormDragLayout(props) {
         {loop(item.children)}
       </ReactSortable>
     } else {
-      return <div key={index}>{item.name}</div>
+      console.log(11, item)
+      const Com = Controls[item.type.toLowerCase()]
+      return <div key={index}><Com {...item.attr} /></div>
     }
   })
 
@@ -48,10 +67,10 @@ function FormDragLayout(props) {
     // 拖拽元素的目标路径
     const { newIndex } = evt;
 
-    const newItem = _.cloneDeep(sourceData.find(item => (item.key === type)))
+    const newItem = _.cloneDeep(sourceData.find(item => (item.type === type)))
 
     // 如果是容器
-    if(newItem.key === 'Container') {
+    if(newItem.type === 'Container') {
       newItem.children = []
     }
     console.log(type, newIndex, newItem )

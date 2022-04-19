@@ -25,9 +25,17 @@ function MyInput(props) {
 
 const config = [
   {
-    type: 'input',
+    type: 'text',
     label: '文本框',
     key: 'text',
+    attrs: {
+      value: '我是文本111'
+    }
+  },
+  {
+    type: 'input',
+    label: '输入框',
+    key: 'input',
     rules: [
       {
         required: true,
@@ -334,7 +342,8 @@ export default function MyForm() {
   function setFormValue() {
     const ref = formRef.current.getFormRef()
     ref.setFieldsValue({
-      text: '111',
+      text: '我是文本',
+      input: '111',
       inputNumber: 222,
       phone: 134893845532,
       select: 2,

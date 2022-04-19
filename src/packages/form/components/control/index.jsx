@@ -1,6 +1,7 @@
 import PropTypes, {any, func} from 'prop-types';
 
 // 控件
+import Text from '../text';
 import Input from '../input';
 import InputNumber from '../input-number'
 import Select from '../select';
@@ -17,6 +18,7 @@ import CheckboxGroup from '../checkbox/CheckboxGroup'
 
 // 控件
 const Control = {
+  text: Text,                       // 文本
   input: Input,                     // input
   number: InputNumber,              // 数字输入框
   select: Select,                   // select
