@@ -5,7 +5,13 @@
   .drag-form {
     height: 100%;
     .drag-items {
+      padding: 30px;
       min-height: 100%;
+      box-sizing: border-box;
     }
+  }
+  .loop-drag-items {
+    min-height: 100px;
+    border: 1px solid #ccc;
   }
 }

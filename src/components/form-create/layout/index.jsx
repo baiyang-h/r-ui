@@ -43,10 +43,7 @@ function DragFormLayout(props) {
   const loop = (arr=[]) => arr.map((item, index) => {
     if (item.children) {
       return <ReactSortable
-        style={{
-          minHeight: 100,
-          margin: 10,
-        }}
+        className="loop-drag-items"
         animation={150}
         group={{ name: 'form-create', pull: true, put: true }}
         key={uniqueId('sortable_')}
@@ -66,6 +63,7 @@ function DragFormLayout(props) {
         return <Form.Item
           key={index}
           name={item.id}
+          label={item.id}
         >
           <Com {...item.attr} />
         </Form.Item>
