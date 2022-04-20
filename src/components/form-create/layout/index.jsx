@@ -4,7 +4,7 @@ import _, { uniqueId } from 'lodash';
 import './index.scss';
 import { sourceData } from '../control';
 import { Form } from 'antd';
-import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup } from '@/packages/form/components'
+import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 
 const Controls = {
   text: Text,
@@ -20,6 +20,7 @@ const Controls = {
   radiogroup: RadioGroup,
   checkbox: Checkbox,
   checkboxgroup: CheckboxGroup,
+  rate: Rate
 }
 
 function DragFormLayout(props) {
@@ -39,8 +40,7 @@ function DragFormLayout(props) {
   //   },
   // }
 
-  const loop = (arr) => arr.map((item, index) => {
-
+  const loop = (arr=[]) => arr.map((item, index) => {
     if (item.children) {
       return <ReactSortable
         style={{
@@ -48,40 +48,46 @@ function DragFormLayout(props) {
           margin: 10,
         }}
         animation={150}
-        group={{name: "form-create"}}
+        group={{ name: 'form-create', pull: true, put: true }}
+        key={uniqueId('sortable_')}
         list={item.children}
-        setList={setList}
+        setList={(...args) => {
+          const [_list, _sortable, _dragging] = args
+          item.children = _list
+        }}
         onAdd={sortableAdd}
         onUpdate={sortableUpdate}
       >
         {loop(item.children)}
       </ReactSortable>
     } else {
-      console.log(11, item)
       const Com = Controls[item.type.toLowerCase()]
-      return <Form.Item
-        key={index}
-        name={item.id}
-      >
-        <Com {...item.attr} />
-      </Form.Item>
+      if(Com) {
+        return <Form.Item
+          key={index}
+          name={item.id}
+        >
+          <Com {...item.attr} />
+        </Form.Item>
+      } else {
+        return <div key={index} />
+      }
     }
   })
 
   const sortableAdd = (evt) => {
     console.log('Add', evt)
-    // 组件名或路径
-    const type = evt.clone.getAttribute('data-type');
-    // 拖拽元素的目标路径
-    const { newIndex } = evt;
-
-    const newItem = _.cloneDeep(sourceData.find(item => (item.type === type)))
-
-    // 如果是容器
-    if(newItem.type === 'Container') {
-      newItem.children = []
-    }
-    console.log(type, newIndex, newItem )
+    // // 组件名或路径
+    // const type = evt.clone.getAttribute('data-type');
+    // // 拖拽元素的目标路径
+    // const { newIndex } = evt;
+    //
+    // const newItem = _.cloneDeep(sourceData.find(item => (item.type === type)))
+    // // 如果是容器
+    // if(newItem.type.toLowerCase() === 'container') {
+    //   newItem.children = []
+    // }
+    // console.log(type, newIndex, newItem )
   }
 
   const sortableUpdate = (evt) => {
@@ -97,10 +103,15 @@ function DragFormLayout(props) {
       <ReactSortable
         className="drag-items"
         animation={150}
+        fallbackOnBody={true}
         group={{name: "form-create"}}
         clone={item => ({ ...item, id: uniqueId('field_') })}
         list={list}
-        setList={setList}
+        setList={(...args) => {
+          const [_list, _sortable, _dragging] = args
+          console.log(11, _list, _sortable, _dragging)
+          setList(_list)
+        }}
         onAdd={sortableAdd}
         onUpdate={sortableUpdate}
       >
@@ -108,10 +119,6 @@ function DragFormLayout(props) {
       </ReactSortable>
     </Form>
   </div>
-}
-
-function MyInput(props) {
-  console.log(props)
 }
 
 export default DragFormLayout

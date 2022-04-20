@@ -1,3 +1,4 @@
+import { Rate } from "antd";
 import Text from "../components/text";
 import Input from "../components/input";
 import InputNumber from "../components/input-number";
@@ -26,4 +27,5 @@ export {
   RadioGroup,
   Checkbox,
   CheckboxGroup,
+  Rate
 }

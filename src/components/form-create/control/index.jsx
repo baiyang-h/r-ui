@@ -7,9 +7,9 @@ export const sourceData = [
   { type: 'input', name: '输入框', attr: {} },
   { type: 'number', name: '数字输入框', attr: {} },
   { type: 'select', name: '选择器', attr: {} },
-  { type: 'radiogroup', name: '单选框', attr: {} },
+  { type: 'radiogroup', name: '单选框', attr: { options: [{ label: '男', value: '1' }, { label: '女', value: '2' }] } },
   { type: 'checkbox', name: '复选框', attr: {} },
-  { type: 'checkboxgroup', name: '复选框组', attr: {} },
+  { type: 'checkboxgroup', name: '复选框组', attr: { options: [{ label: '男', value: '1' }, { label: '女', value: '2' }] } },
   { type: 'switch', name: '开关', attr: {} },
   { type: 'time', name: '时间选择器', attr: {} },
   { type: 'date', name: '日期选择器', attr: {} },
@@ -18,7 +18,7 @@ export const sourceData = [
   { type: 'treeselect', name: '树选择', attr: {} },
   { type: 'cascader', name: '级联选择', attr: {} },
   { type: 'Upload', name: '上传', attr: {} },
-  { type: 'Container', name: '容器', attr: { border:'1px solid red' } },
+  { type: 'Container', name: '容器', attr: { border:'1px solid red' }, children: [] },
 ]
 
 function FormControls() {
