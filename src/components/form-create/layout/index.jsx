@@ -50,6 +50,7 @@ function DragFormLayout(props) {
         list={item.children}
         setList={(...args) => {
           const [_list, _sortable, _dragging] = args
+          console.log(222, _list)
           item.children = _list
         }}
         onAdd={sortableAdd}
@@ -101,13 +102,12 @@ function DragFormLayout(props) {
       <ReactSortable
         className="drag-items"
         animation={150}
-        fallbackOnBody={true}
         group={{name: "form-create"}}
         clone={item => ({ ...item, id: uniqueId('field_') })}
         list={list}
         setList={(...args) => {
           const [_list, _sortable, _dragging] = args
-          console.log(11, _list, _sortable, _dragging)
+          console.log(11, _list)
           setList(_list)
         }}
         onAdd={sortableAdd}
