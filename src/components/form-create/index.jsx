@@ -20,7 +20,7 @@ function FormCreate(props) {
     <Layout>
       <Sider width="260"><FormControls /></Sider>
       <Content><FormDragLayout /></Content>
-      <Sider width="320"><FormSetController /></Sider>
+      {/*<Sider width="320"><FormSetController /></Sider>*/}
     </Layout>
   </div>
 }
