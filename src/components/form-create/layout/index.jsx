@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {ReactSortable} from "react-sortablejs";
 import _, { uniqueId } from 'lodash';
 import './index.scss';
@@ -40,6 +40,10 @@ function DragFormLayout(props) {
   //   },
   // }
 
+  useEffect(() => {
+    console.log(list, 'stated');
+  }, [list])
+
   const loop = (arr=[]) => arr.map((item, index) => {
     if (item.children) {
       return <ReactSortable
@@ -49,8 +53,8 @@ function DragFormLayout(props) {
         key={uniqueId('sortable_')}
         list={item.children}
         setList={(...args) => {
-          const [_list, _sortable, _dragging] = args
-          console.log(222, _list)
+          const _list = _.cloneDeep(args[0])
+          // console.log(222, _list)
           item.children = _list
         }}
         onAdd={sortableAdd}
@@ -106,8 +110,8 @@ function DragFormLayout(props) {
         clone={item => ({ ...item, id: uniqueId('field_') })}
         list={list}
         setList={(...args) => {
-          const [_list, _sortable, _dragging] = args
-          console.log(11, _list)
+          const _list = _.cloneDeep(args[0])
+          // console.log(11, _list)
           setList(_list)
         }}
         onAdd={sortableAdd}
