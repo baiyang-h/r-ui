@@ -30,6 +30,30 @@ function DragFormLayout(props) {
 
   const [form] = Form.useForm();
 
+  const sortableAdd = (evt) => {
+    console.log('Add', evt)
+  }
+
+  const sortableUpdate = (evt) => {
+    console.log('Update', evt)
+  }
+
+  const onWrapFormItemClick = (item) => {
+    setSelected(item.id)
+  }
+
+  // 容器拷贝
+  const onWrapFormItemCopy = (item, index) => {
+    const _list = _.cloneDeep(list)
+    _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
+    setList(_list)
+  }
+
+  // 容器删除
+  const onWrapFormItemDelete = (item, index) => {
+    setList(list.filter(_item => _item.id !== item.id))
+  }
+
   const loop = (arr=[]) => arr.map((item, index) => {
     if (item.children) {
       return <ReactSortable
@@ -59,7 +83,9 @@ function DragFormLayout(props) {
         return <WrapFormItem
           key={index}
           selected={selected === item.id}
-          onClick={() => WrapFormItemClick(item)}
+          onClick={() => onWrapFormItemClick(item, index)}
+          onCopy={() => onWrapFormItemCopy(item, index)}
+          onDelete={() => onWrapFormItemDelete(item, index)}
         >
           <Form.Item
             name={item.id}
@@ -73,18 +99,6 @@ function DragFormLayout(props) {
       }
     }
   })
-
-  const sortableAdd = (evt) => {
-    console.log('Add', evt)
-  }
-
-  const sortableUpdate = (evt) => {
-    console.log('Update', evt)
-  }
-
-  const WrapFormItemClick = (item) => {
-    setSelected(item.id)
-  }
 
   return <div className="drag-form-layout">
     <Form
