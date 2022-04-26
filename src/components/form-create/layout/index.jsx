@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {ReactSortable} from "react-sortablejs";
 import _, { uniqueId } from 'lodash';
 import './index.scss';
 import { Form } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
+import WrapFormItem from "./components/WrapFormItem";
 
 const Controls = {
   text: Text,
@@ -25,23 +26,9 @@ const Controls = {
 function DragFormLayout(props) {
 
   const [list, setList] = useState([]);
+  const [selected, setSelected] = useState(undefined)
 
   const [form] = Form.useForm();
-
-  // const sortableOption = {
-  //   animation: 150,
-  //   fallbackOnBody: true,
-  //   swapThreshold: 0.65,
-  //   group: {
-  //     name: 'form-create',
-  //     pull: true,
-  //     put: true,
-  //   },
-  // }
-
-  // useEffect(() => {
-  //   console.log(list, 'stated');
-  // }, [list])
 
   const loop = (arr=[]) => arr.map((item, index) => {
     if (item.children) {
@@ -69,13 +56,18 @@ function DragFormLayout(props) {
     } else {
       const Com = Controls[item.type.toLowerCase()]
       if(Com) {
-        return <Form.Item
+        return <WrapFormItem
           key={index}
-          name={item.id}
-          label={item.id}
+          selected={selected === item.id}
+          onClick={() => WrapFormItemClick(item)}
         >
-          <Com {...item.attr} />
-        </Form.Item>
+          <Form.Item
+            name={item.id}
+            label={item.id}
+          >
+            <Com {...item.attr} />
+          </Form.Item>
+        </WrapFormItem>
       } else {
         return <div key={index} />
       }
@@ -88,6 +80,10 @@ function DragFormLayout(props) {
 
   const sortableUpdate = (evt) => {
     console.log('Update', evt)
+  }
+
+  const WrapFormItemClick = (item) => {
+    setSelected(item.id)
   }
 
   return <div className="drag-form-layout">

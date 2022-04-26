@@ -1,0 +1,9 @@
+.wrap-form-item {
+  padding: 4px 10px 0;
+  box-sizing: border-box;
+  margin-bottom: 5px;
+  border: 1px dashed transparent;
+}
+.wrap-form-item--selected {
+  border: 1px dashed #409eff;
+}
