@@ -59,6 +59,7 @@ function DragFormLayout(props) {
       return <ReactSortable
         className="loop-drag-items"
         animation={150}
+        handle=".wrap-form-item--drag-icon"
         group={{ name: 'form-create', pull: true, put: true }}
         key={item.id}
         list={item.children}
@@ -109,6 +110,7 @@ function DragFormLayout(props) {
       <ReactSortable
         className="drag-items"
         animation={150}
+        handle=".wrap-form-item--drag-icon"
         group={{name: "form-create"}}
         list={list}
         setList={(...args) => {

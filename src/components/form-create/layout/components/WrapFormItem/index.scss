@@ -4,6 +4,12 @@
   margin-bottom: 5px;
   border: 1px dashed transparent;
   position: relative;
+  .anticon-drag  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #1890ff;
+  }
   .wrap-form-item-icons {
     position: absolute;
     right: 8px;

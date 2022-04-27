@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from "classnames";
 import './index.scss'
-import { DeleteOutlined, CopyOutlined } from '@ant-design/icons'
-
-
+import { DeleteOutlined, CopyOutlined, DragOutlined } from '@ant-design/icons'
 
 WrapFormItem.propTypes = {
   // 是否被选中
@@ -35,6 +33,7 @@ function WrapFormItem(props) {
   }
 
   return <div className={classNames('wrap-form-item', props.selected ? 'wrap-form-item--selected' : false)} onClick={handleClick}>
+    { props.selected &&  <DragOutlined className="wrap-form-item--drag-icon" />}
     { props.children }
     {
       props.selected && <div className="wrap-form-item-icons">
