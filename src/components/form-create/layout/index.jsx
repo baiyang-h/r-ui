@@ -4,7 +4,7 @@ import _, { uniqueId } from 'lodash';
 import './index.scss';
 import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
-import WrapFormItem from "./components/WrapFormItem";
+import DragWrapper from "./components/DragWrapper"
 
 const Controls = {
   text: Text,
@@ -38,30 +38,33 @@ function DragFormLayout(props) {
     console.log('Update', evt)
   }
 
-  const onWrapFormItemClick = (item) => {
+  const onDragWrapperClick = (item) => {
     setSelected(item.id)
   }
 
   // 容器拷贝
-  const onWrapFormItemCopy = (item, index) => {
+  const onDragWrapperCopy = (item, index) => {
     const _list = _.cloneDeep(list)
     _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
     setList(_list)
   }
 
   // 容器删除
-  const onWrapFormItemDelete = (item, index) => {
+  const onDragWrapperDelete = (item, index) => {
     setList(list.filter(_item => _item.id !== item.id))
   }
 
-  const loop = (arr=[]) => arr.map((item, index) => {
-    if(item.type === 'container') { // 如果类型是容器
-      return <ReactSortable
+  const loop = (arr=[], level='') => arr.map((item, index) => {
+    // 层级 例：0-1  1-1-1
+    level = level ? index : `${level}-${index}`
+
+    let RenderCom
+    if(item.type === 'container') {  // 如果类型是容器
+      RenderCom = <ReactSortable
         className="loop-drag-items"
         animation={150}
         handle=".wrap-form-item--drag-icon"
         group={{ name: 'form-create', pull: true, put: true }}
-        key={item.id}
         list={item.children}
         setList={(...args) => {
           const _list = _.cloneDeep(args[0])
@@ -79,7 +82,9 @@ function DragFormLayout(props) {
         {loop(item.children)}
       </ReactSortable>
     } else if(item.type === 'grid') {  // 如果类型是栅格
-      return <Row className="grid-form-item-row">
+      RenderCom = <Row
+        className="grid-form-item-row"
+      >
         {
           item.children.map((col, _index) => <Col
             key={_index}
@@ -92,25 +97,26 @@ function DragFormLayout(props) {
       </Row>
     } else { // 其他类型
       const Com = Controls[item.type.toLowerCase()]
-      if(Com) {
-        return <WrapFormItem
-          key={index}
-          selected={selected === item.id}
-          onClick={() => onWrapFormItemClick(item, index)}
-          onCopy={() => onWrapFormItemCopy(item, index)}
-          onDelete={() => onWrapFormItemDelete(item, index)}
-        >
-          <Form.Item
-            name={item.id}
-            label={item.id}
-          >
-            <Com {...item.attr} />
-          </Form.Item>
-        </WrapFormItem>
-      } else {
-        return <div key={index} />
-      }
+      RenderCom = Com ? <Form.Item
+        name={item.id}
+        label={item.id}
+      >
+        <Com {...item.attr} />
+      </Form.Item> : <div />
     }
+
+
+
+    return <DragWrapper
+      key={level}
+      data-level={level}
+      selected={selected === item.id}
+      onClick={() => onDragWrapperClick(item, index)}
+      onCopy={() => onDragWrapperCopy(item, index)}
+      onDelete={() => onDragWrapperDelete(item, index)}
+    >
+      { RenderCom }
+    </DragWrapper>
   })
 
   return <div className="drag-form-layout">

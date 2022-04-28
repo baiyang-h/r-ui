@@ -3,7 +3,7 @@ import classNames from "classnames";
 import './index.scss'
 import { DeleteOutlined, CopyOutlined, DragOutlined } from '@ant-design/icons'
 
-WrapFormItem.propTypes = {
+DragWrapper.propTypes = {
   // 是否被选中
   selected: PropTypes.bool,
   onClick: PropTypes.func,
@@ -11,11 +11,11 @@ WrapFormItem.propTypes = {
   onDelete: PropTypes.func,
 }
 
-WrapFormItem.defaultProps = {
+DragWrapper.defaultProps = {
   selected: false
 }
 
-function WrapFormItem(props) {
+function DragWrapper(props) {
 
   // 点击
   const handleClick = () => {
@@ -32,11 +32,11 @@ function WrapFormItem(props) {
     props.onClick && props.onDelete()
   }
 
-  return <div className={classNames('wrap-form-item', props.selected ? 'wrap-form-item--selected' : false)} onClick={handleClick}>
-    { props.selected &&  <DragOutlined className="wrap-form-item--drag-icon" />}
+  return <div className={classNames('drag-wrapper', props.selected ? 'drag-wrapper--selected' : false)} onClick={handleClick}>
+    { props.selected &&  <DragOutlined className="drag-wrapper--drag-icon" />}
     { props.children }
     {
-      props.selected && <div className="wrap-form-item-icons">
+      props.selected && <div className="drag-wrapper-icons">
         <CopyOutlined onClick={onCopy} />
         <DeleteOutlined onClick={onDelete} />
       </div>
@@ -44,4 +44,4 @@ function WrapFormItem(props) {
   </div>
 }
 
-export default WrapFormItem
+export default DragWrapper

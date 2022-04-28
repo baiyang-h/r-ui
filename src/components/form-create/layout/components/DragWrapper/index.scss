@@ -1,4 +1,4 @@
-.wrap-form-item {
+.drag-wrapper {
   padding: 4px 10px 0;
   box-sizing: border-box;
   margin-bottom: 5px;
@@ -10,10 +10,10 @@
     left: 0;
     color: #1890ff;
   }
-  .wrap-form-item--drag-icon {
+  .drag-wrapper--drag-icon {
     font-size: 16px;
   }
-  .wrap-form-item-icons {
+  .drag-wrapper-icons {
     position: absolute;
     right: 8px;
     bottom: 0;
@@ -31,6 +31,6 @@
   }
 }
 
-.wrap-form-item--selected {
+.drag-wrapper--selected {
   border: 1px dashed #409eff;
 }

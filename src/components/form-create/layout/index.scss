@@ -10,7 +10,7 @@
     .drag-items {
       min-height: 100%;
       box-sizing: border-box;
-      .wrap-form-item {
+      .drag-wrapper {
         padding-left: 10px;
       }
     }
@@ -23,7 +23,7 @@
     align-items: center;
     border: 1px dashed #ccc;
     padding-right: 10px;
-    .wrap-form-item {
+    .drag-wrapper {
       flex: 1;
       .ant-form-item {
         margin-bottom: 0;
@@ -37,7 +37,6 @@
     min-height: 60px;
     margin-bottom: 5px;
     .grid-form-item-col {
-      border: 1px dashed #ccc
     }
   }
 }
