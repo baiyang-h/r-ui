@@ -17,8 +17,9 @@ export const sourceData = [
   { type: 'slider', name: '滑动输入条', attr: {} },
   { type: 'treeselect', name: '树选择', attr: {} },
   { type: 'cascader', name: '级联选择', attr: {} },
-  { type: 'Upload', name: '上传', attr: {} },
-  { type: 'Container', name: '容器', attr: {}, children: [] },
+  { type: 'upload', name: '上传', attr: {} },
+  { type: 'container', name: '容器', attr: {}, children: [] },
+  { type: 'grid', name: '栅格', attr: {}, children: [] },
 ]
 
 function FormControls() {
