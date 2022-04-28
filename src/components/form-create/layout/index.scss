@@ -28,9 +28,16 @@
       .ant-form-item {
         margin-bottom: 0;
       }
-      //.ant-form-item+.ant-form-item {
-      //  margin-left: 15px;
-      //}
+    }
+  }
+
+  .grid-form-item-row {
+    border: 1px dashed #ccc;
+    padding: 10px;
+    min-height: 60px;
+    margin-bottom: 5px;
+    .grid-form-item-col {
+      border: 1px dashed #ccc
     }
   }
 }

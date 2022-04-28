@@ -19,7 +19,7 @@ export const sourceData = [
   { type: 'cascader', name: '级联选择', attr: {} },
   { type: 'upload', name: '上传', attr: {} },
   { type: 'container', name: '容器', attr: {}, children: [] },
-  { type: 'grid', name: '栅格', attr: {}, children: [] },
+  { type: 'grid', name: '栅格', attr: {}, children: [{}, {}] },
 ]
 
 function FormControls() {
