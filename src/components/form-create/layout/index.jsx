@@ -42,11 +42,19 @@ function DragFormLayout(props) {
     setSelected(item.id)
   }
 
-  // 容器拷贝
-  const onDragWrapperCopy = (item, index) => {
+  // 容器拷贝（无关数据）
+  const onDragWrapperAdd = (item, index) => {
     const _list = _.cloneDeep(list)
     _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
     setList(_list)
+  }
+
+  // 容器拷贝（包括数据）
+  const onDragWrapperCopy = (item, index) => {
+    console.log(form.getFieldsValue())
+    // const _list = _.cloneDeep(list)
+    // _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
+    // setList(_list)
   }
 
   // 容器删除
@@ -56,17 +64,18 @@ function DragFormLayout(props) {
 
   const loop = (arr=[], level='') => arr.map((item, index) => {
     // 层级 例：0-1  1-1-1
-    level = level ? index : `${level}-${index}`
+    let _level = level==='' ? index + '' : `${level}-${index}`
 
     let RenderCom
     if(item.type === 'container') {  // 如果类型是容器
       RenderCom = <ReactSortable
         className="loop-drag-items"
         animation={150}
-        handle=".wrap-form-item--drag-icon"
+        handle=".drag-wrapper--drag-icon"
         group={{ name: 'form-create', pull: true, put: true }}
         list={item.children}
         setList={(...args) => {
+          console.log(2, args)
           const _list = _.cloneDeep(args[0])
           _list.forEach(item => {
             if(!item.id) {
@@ -79,7 +88,7 @@ function DragFormLayout(props) {
         onAdd={sortableAdd}
         onUpdate={sortableUpdate}
       >
-        {loop(item.children)}
+        {loop(item.children, _level)}
       </ReactSortable>
     } else if(item.type === 'grid') {  // 如果类型是栅格
       RenderCom = <Row
@@ -105,13 +114,12 @@ function DragFormLayout(props) {
       </Form.Item> : <div />
     }
 
-
-
     return <DragWrapper
-      key={level}
-      data-level={level}
+      key={_level}
+      level={_level}
       selected={selected === item.id}
       onClick={() => onDragWrapperClick(item, index)}
+      onAdd={() => onDragWrapperAdd(item, index)}
       onCopy={() => onDragWrapperCopy(item, index)}
       onDelete={() => onDragWrapperDelete(item, index)}
     >
@@ -128,10 +136,11 @@ function DragFormLayout(props) {
       <ReactSortable
         className="drag-items"
         animation={150}
-        handle=".wrap-form-item--drag-icon"
+        handle=".drag-wrapper--drag-icon"
         group={{name: "form-create"}}
         list={list}
         setList={(...args) => {
+          console.log(1, args)
           const _list = _.cloneDeep(args[0])
           _list.forEach(item => {
             if(!item.id) {
