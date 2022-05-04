@@ -12,6 +12,7 @@
       box-sizing: border-box;
       .drag-wrapper {
         padding-left: 10px;
+        user-select: none;
       }
     }
   }

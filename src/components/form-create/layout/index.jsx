@@ -5,6 +5,7 @@ import './index.scss';
 import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 import DragWrapper from "./components/DragWrapper"
+import { sourceData } from '../control/index'
 
 const Controls = {
   text: Text,
@@ -23,6 +24,55 @@ const Controls = {
   rate: Rate
 }
 
+const Drag = {
+  // 对于有嵌套的容器 获取相应的children
+  getLevelChildren(list, level) {
+    const levelList = level.split('-')
+    let len = levelList.length
+    let index = 0
+    let children = list
+    while (len-index) {
+      children = children[levelList[index]].children
+      index++
+    }
+    return children
+  },
+  add(list, level, newIndex, dic, root=false) {
+    if(root) {  // 根部
+      list.splice(newIndex, 0, dic)
+    } else { // 嵌套
+      const levelList = level.split('-')
+      let len = levelList.length
+      let index = 0
+      let children = list
+      while (len-index) {
+        children = children[levelList[index]].children
+        index++
+      }
+      children.splice(newIndex, 0, dic)
+    }
+  },
+  remove(list, level, oldIndex) {
+    const levelList = level.split('-')
+    let len = levelList.length
+    if(len>1) { // 嵌套删除
+      let index = 0
+      let children = list
+      while (len-index>1) {
+        children = children[levelList[index]].children
+        index++
+      }
+      const removeRow = children[oldIndex]
+      children.splice(oldIndex, 1)
+      return removeRow
+    } else { // 根部删除
+      const removeRow = list[oldIndex]
+      list.splice(oldIndex, 1)
+      return removeRow
+    }
+  }
+}
+
 function DragFormLayout(props) {
 
   const [list, setList] = useState([]);
@@ -30,12 +80,58 @@ function DragFormLayout(props) {
 
   const [form] = Form.useForm();
 
+  // 添加
   const sortableAdd = (evt) => {
     console.log('Add', evt)
+    const _list = _.cloneDeep(list)
+    // 获取控件类型信息
+    const type = evt.clone.getAttribute('data-type')
+    const row = sourceData.find(item => item.type === type)
+
+    // 拖拽到的位置索引
+    const newIndex = evt.newIndex
+
+    // 添加，1.从表单控件拖拽添加。 2.从已有的嵌套内部拖动添加
+    const to = evt.to
+    const from = evt.from
+    const clone = evt.clone
+    if(to.className === 'drag-items') {  // 添加到根
+      _list.splice(newIndex, 0, {...row, id: uniqueId('field_')})
+      setList(_list)
+    } else if(to.className === 'loop-drag-items') { // 添加到嵌套容器
+      // 因为在每个 drag-wrapper 上定义了一个data-level属性，level就是相应的层级信息
+      const wrapperParentNode = to.parentNode
+      const newLevel = wrapperParentNode.getAttribute('data-level')
+      // 此处需判断是从左侧控件处拖拽而来，还是从已有的拖拽表单处拖拽而来
+      if(from.id === 'control-items') {  // 左侧控件拖拽而来
+        Drag.add(_list, newLevel, newIndex, {...row, id: uniqueId('field_')})
+        setList(_list)
+      } else {  // 已存在的表单移动
+        const oldLevel =clone.getAttribute('data-level')
+        const oldIndex = evt.oldIndex
+        const oldRow = Drag.remove(_list, oldLevel, oldIndex)
+        Drag.add(_list, newLevel, newIndex, oldRow)
+        console.log(_list)
+        setList(_list)
+      }
+    }
   }
 
+  // 移动
   const sortableUpdate = (evt) => {
     console.log('Update', evt)
+    const _list = _.cloneDeep(list)
+    const to = evt.to
+    const newIndex = evt.newIndex
+    const oldIndex = evt.oldIndex
+    if(to.className === 'drag-items') { // 如果是在根部移动的
+      const oldItem = _list[oldIndex]
+      _list.splice(oldIndex, 1)
+      _list.splice(newIndex, 0, oldItem)
+      setList(_list)
+    } else if(to.className === 'loop-drag-items') {  // 如果在容器内部移动的
+
+    }
   }
 
   const onDragWrapperClick = (item) => {
@@ -74,17 +170,7 @@ function DragFormLayout(props) {
         handle=".drag-wrapper--drag-icon"
         group={{ name: 'form-create', pull: true, put: true }}
         list={item.children}
-        setList={(...args) => {
-          console.log(2, args)
-          const _list = _.cloneDeep(args[0])
-          _list.forEach(item => {
-            if(!item.id) {
-              item.id = uniqueId('field_')
-            }
-          })
-          item.children = _list
-          setList(_.cloneDeep(list))
-        }}
+        setList={()=>{}}
         onAdd={sortableAdd}
         onUpdate={sortableUpdate}
       >
@@ -139,16 +225,7 @@ function DragFormLayout(props) {
         handle=".drag-wrapper--drag-icon"
         group={{name: "form-create"}}
         list={list}
-        setList={(...args) => {
-          console.log(1, args)
-          const _list = _.cloneDeep(args[0])
-          _list.forEach(item => {
-            if(!item.id) {
-              item.id = uniqueId('field_')
-            }
-          })
-          setList(_list)
-        }}
+        setList={() => {}}
         onAdd={sortableAdd}
         onUpdate={sortableUpdate}
       >
