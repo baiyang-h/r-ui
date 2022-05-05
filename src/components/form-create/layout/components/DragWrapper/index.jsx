@@ -7,6 +7,7 @@ DragWrapper.propTypes = {
   // 是否被选中
   selected: PropTypes.bool,
   level: PropTypes.string,
+  field: PropTypes.string,
   onClick: PropTypes.func,
   onCopy: PropTypes.func,
   onDelete: PropTypes.func,
@@ -14,7 +15,7 @@ DragWrapper.propTypes = {
 
 DragWrapper.defaultProps = {
   selected: false,
-  level: '0'
+  level: '0',
 }
 
 function DragWrapper(props) {
@@ -44,6 +45,7 @@ function DragWrapper(props) {
   return <div
     className={classNames('drag-wrapper', props.selected ? 'drag-wrapper--selected' : false)}
     data-level={props.level}
+    data-field={props.field}
     onClick={handleClick}
   >
     { props.selected &&  <DragOutlined className="drag-wrapper--drag-icon" />}

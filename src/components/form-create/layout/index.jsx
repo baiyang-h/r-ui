@@ -37,20 +37,26 @@ const Drag = {
     }
     return children
   },
-  add(list, level, newIndex, dic, root=false) {
-    if(root) {  // 根部
+  add(list, newField, newIndex, dic, root=false) {
+    if(root) { // 根部
       list.splice(newIndex, 0, dic)
     } else { // 嵌套
-      const levelList = level.split('-')
-      let len = levelList.length
-      let index = 0
-      let children = list
-      while (len-index) {
-        children = children[levelList[index]].children
-        index++
+      const loop = (children) => {
+        for(let child of children) {
+          if(child.id === newField) {
+            return child.children.splice(newIndex, 0, dic)
+          }
+          if(child.children) {
+            loop(child.children)
+          }
+        }
       }
-      children.splice(newIndex, 0, dic)
+      loop(list)
     }
+  },
+  move(list, oldLevel, oldIndex, newLevel, newIndex) {
+    // 确定好要添加的位置，我们根据要添加进去的前一个item或者后一个item来找到正确的位置，因为删除或者新增会改变索引
+
   },
   remove(list, level, oldIndex) {
     const levelList = level.split('-')
@@ -63,6 +69,7 @@ const Drag = {
         index++
       }
       const removeRow = children[oldIndex]
+      // 为了让删除后数组不塌陷，所以补充一个null做支撑，最后全都处理完后，将其过滤
       children.splice(oldIndex, 1)
       return removeRow
     } else { // 根部删除
@@ -90,28 +97,33 @@ function DragFormLayout(props) {
 
     // 拖拽到的位置索引
     const newIndex = evt.newIndex
-
+    const oldIndex = evt.oldIndex
     // 添加，1.从表单控件拖拽添加。 2.从已有的嵌套内部拖动添加
     const to = evt.to
-    const from = evt.from
     const clone = evt.clone
+    const from = evt.from
+    console.log(evt)
     if(to.className === 'drag-items') {  // 添加到根
-      Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
-      setList(_list)
+      if(from.id === 'control-items') { // 左侧控件拖拽而来
+        Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
+        setList(_list)
+      } else { // 已存在的表单移动（先移除再添加）
+
+      }
     } else if(to.className === 'loop-drag-items') { // 添加到嵌套容器
       // 因为在每个 drag-wrapper 上定义了一个data-level属性，level就是相应的层级信息
       const wrapperParentNode = to.parentNode
       const newLevel = wrapperParentNode.getAttribute('data-level')
+      const newField = wrapperParentNode.getAttribute('data-field')
+      const oldLevel = clone.getAttribute('data-level')
       // 此处需判断是从左侧控件处拖拽而来，还是从已有的拖拽表单处拖拽而来
       if(from.id === 'control-items') {  // 左侧控件拖拽而来
-        Drag.add(_list, newLevel, newIndex, {...row, id: uniqueId('field_')})
+        Drag.add(_list, newField, newIndex, {...row, id: uniqueId('field_')})
         setList(_list)
       } else {  // 已存在的表单移动（先移除再添加）
-        const oldLevel =clone.getAttribute('data-level')
-        const oldIndex = evt.oldIndex
         const oldRow = Drag.remove(_list, oldLevel, oldIndex)
-        Promise.resolve().then(r=> {
-          Drag.add(_list, newLevel, newIndex, oldRow)
+        Drag.add(_list, newField, newIndex, oldRow)
+        Promise.resolve().then(()=> {
           setList(_list)
         })
       }
@@ -204,6 +216,7 @@ function DragFormLayout(props) {
     return <DragWrapper
       key={_level}
       level={_level}
+      field={item.id}
       selected={selected === item.id}
       onClick={() => onDragWrapperClick(item, index)}
       onAdd={() => onDragWrapperAdd(item, index)}
