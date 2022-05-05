@@ -96,7 +96,7 @@ function DragFormLayout(props) {
     const from = evt.from
     const clone = evt.clone
     if(to.className === 'drag-items') {  // 添加到根
-      _list.splice(newIndex, 0, {...row, id: uniqueId('field_')})
+      Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
       setList(_list)
     } else if(to.className === 'loop-drag-items') { // 添加到嵌套容器
       // 因为在每个 drag-wrapper 上定义了一个data-level属性，level就是相应的层级信息
@@ -106,13 +106,14 @@ function DragFormLayout(props) {
       if(from.id === 'control-items') {  // 左侧控件拖拽而来
         Drag.add(_list, newLevel, newIndex, {...row, id: uniqueId('field_')})
         setList(_list)
-      } else {  // 已存在的表单移动
+      } else {  // 已存在的表单移动（先移除再添加）
         const oldLevel =clone.getAttribute('data-level')
         const oldIndex = evt.oldIndex
         const oldRow = Drag.remove(_list, oldLevel, oldIndex)
-        Drag.add(_list, newLevel, newIndex, oldRow)
-        console.log(_list)
-        setList(_list)
+        Promise.resolve().then(r=> {
+          Drag.add(_list, newLevel, newIndex, oldRow)
+          setList(_list)
+        })
       }
     }
   }
