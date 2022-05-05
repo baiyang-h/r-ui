@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useImperativeHandle} from 'react'
 import {ReactSortable} from "react-sortablejs";
 import _, { uniqueId } from 'lodash';
 import './index.scss';
@@ -25,18 +25,6 @@ const Controls = {
 }
 
 const Drag = {
-  // 对于有嵌套的容器 获取相应的children
-  getLevelChildren(list, level) {
-    const levelList = level.split('-')
-    let len = levelList.length
-    let index = 0
-    let children = list
-    while (len-index) {
-      children = children[levelList[index]].children
-      index++
-    }
-    return children
-  },
   add(list, newField, newIndex, dic, root=false) {
     if(root) { // 根部
       list.splice(newIndex, 0, dic)
@@ -53,10 +41,6 @@ const Drag = {
       }
       loop(list)
     }
-  },
-  move(list, oldLevel, oldIndex, newLevel, newIndex) {
-    // 确定好要添加的位置，我们根据要添加进去的前一个item或者后一个item来找到正确的位置，因为删除或者新增会改变索引
-
   },
   remove(list, level, oldIndex) {
     const levelList = level.split('-')
@@ -80,15 +64,22 @@ const Drag = {
   }
 }
 
-function DragFormLayout(props) {
+function DragFormLayout(props, ref) {
 
   const [list, setList] = useState([]);
   const [selected, setSelected] = useState(undefined)
 
   const [form] = Form.useForm();
 
+  useImperativeHandle(ref, () => ({
+    // 清空
+    clear: () => {
+      setList([])
+    }
+  }));
+
   // 添加
-  const sortableAdd = (evt) => {
+  function sortableAdd(evt) {
     console.log('Add', evt)
     const _list = _.cloneDeep(list)
     // 获取控件类型信息
@@ -102,20 +93,22 @@ function DragFormLayout(props) {
     const to = evt.to
     const clone = evt.clone
     const from = evt.from
-    console.log(evt)
+    const oldLevel = clone.getAttribute('data-level')
+    const wrapperParentNode = to.parentNode
+    // 因为在每个 drag-wrapper 上定义了一个data-level属性，level就是相应的层级信息
+    const newField = wrapperParentNode.getAttribute('data-field')
     if(to.className === 'drag-items') {  // 添加到根
       if(from.id === 'control-items') { // 左侧控件拖拽而来
         Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
         setList(_list)
       } else { // 已存在的表单移动（先移除再添加）
-
+        const oldRow = Drag.remove(_list, oldLevel, oldIndex)
+        Drag.add(_list, null, newIndex, oldRow, true)
+        Promise.resolve().then(()=> {
+          setList(_list)
+        })
       }
     } else if(to.className === 'loop-drag-items') { // 添加到嵌套容器
-      // 因为在每个 drag-wrapper 上定义了一个data-level属性，level就是相应的层级信息
-      const wrapperParentNode = to.parentNode
-      const newLevel = wrapperParentNode.getAttribute('data-level')
-      const newField = wrapperParentNode.getAttribute('data-field')
-      const oldLevel = clone.getAttribute('data-level')
       // 此处需判断是从左侧控件处拖拽而来，还是从已有的拖拽表单处拖拽而来
       if(from.id === 'control-items') {  // 左侧控件拖拽而来
         Drag.add(_list, newField, newIndex, {...row, id: uniqueId('field_')})
@@ -131,7 +124,7 @@ function DragFormLayout(props) {
   }
 
   // 移动
-  const sortableUpdate = (evt) => {
+  function sortableUpdate(evt) {
     console.log('Update', evt)
     const _list = _.cloneDeep(list)
     const to = evt.to
@@ -147,19 +140,19 @@ function DragFormLayout(props) {
     }
   }
 
-  const onDragWrapperClick = (item) => {
+  function onDragWrapperClick(item) {
     setSelected(item.id)
   }
 
   // 容器拷贝（无关数据）
-  const onDragWrapperAdd = (item, index) => {
+  function onDragWrapperAdd(item, index) {
     const _list = _.cloneDeep(list)
     _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
     setList(_list)
   }
 
   // 容器拷贝（包括数据）
-  const onDragWrapperCopy = (item, index) => {
+  function onDragWrapperCopy(item, index) {
     console.log(form.getFieldsValue())
     // const _list = _.cloneDeep(list)
     // _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
@@ -167,7 +160,7 @@ function DragFormLayout(props) {
   }
 
   // 容器删除
-  const onDragWrapperDelete = (item, index) => {
+  function onDragWrapperDelete(item, index) {
     setList(list.filter(_item => _item.id !== item.id))
   }
 
@@ -249,4 +242,4 @@ function DragFormLayout(props) {
   </div>
 }
 
-export default DragFormLayout
+export default React.forwardRef(DragFormLayout)
