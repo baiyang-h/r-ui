@@ -64,6 +64,26 @@ const Drag = {
   }
 }
 
+const getParentChildren = (list, field) => {
+  let parentList = list
+  const loop = (children) => {
+    for(let child of children) {
+      if(child.id === field) {
+        parentList = children
+        return true
+      }
+      if(child.children && child.children.length) {
+        const f = loop(child.children)
+        if(f) {
+          return true
+        }
+      }
+    }
+  }
+  loop(list)
+  return parentList
+}
+
 function DragFormLayout(props, ref) {
 
   const [list, setList] = useState([]);
@@ -147,20 +167,35 @@ function DragFormLayout(props, ref) {
   // 容器拷贝（无关数据）
   function onDragWrapperAdd(item, index) {
     const _list = _.cloneDeep(list)
-    _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
+    const children = getParentChildren(_list, item.id)
+    // 因为是要拷贝一份，我们就需要对item进行初始化，回到最初始值，并且像id这种key应该是一个新得唯一值
+    const _item = _.cloneDeep(item)
+    _item.id = uniqueId('field_')
+    if(_item.children) {
+      const loop = (children) => {
+        children.forEach(child => {
+          child.id = uniqueId('field_')
+          if(child.children) {
+            loop(child.children)
+          }
+        })
+      }
+      loop(_item.children)
+    }
+    children.splice(index+1, 0, _item)
     setList(_list)
   }
 
   // 容器拷贝（包括数据）
   function onDragWrapperCopy(item, index) {
-    console.log(form.getFieldsValue())
-    // const _list = _.cloneDeep(list)
-    // _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
-    // setList(_list)
+    const _list = _.cloneDeep(list)
+    _list.splice(index+1, 0, {...item, id: uniqueId('field_')})
+    setList(_list)
   }
 
   // 容器删除
   function onDragWrapperDelete(item, index) {
+    const _list = _.cloneDeep(list)
     setList(list.filter(_item => _item.id !== item.id))
   }
 
