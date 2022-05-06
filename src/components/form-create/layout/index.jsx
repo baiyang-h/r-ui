@@ -196,7 +196,9 @@ function DragFormLayout(props, ref) {
   // 容器删除
   function onDragWrapperDelete(item, index) {
     const _list = _.cloneDeep(list)
-    setList(list.filter(_item => _item.id !== item.id))
+    const children = getParentChildren(_list, item.id)
+    children.splice(index, 1)
+    setList(_list)
   }
 
   const loop = (arr=[], level='') => arr.map((item, index) => {
