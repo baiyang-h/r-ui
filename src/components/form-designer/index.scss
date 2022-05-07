@@ -1,0 +1,17 @@
+.form-designer {
+  height: 100%;
+  .layout {
+    .content {
+      padding: 0;
+    }
+  }
+  .ant-layout-header, .ant-layout-sider, .ant-layout-content {
+    background: #fff;
+  }
+  .ant-layout-header {
+    padding: 0;
+  }
+  .side-left-panel {
+    width: 240px !important;
+  }
+}
