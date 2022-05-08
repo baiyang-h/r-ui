@@ -13,7 +13,7 @@ function FormDesigner() {
   const formDragLayoutRef = useRef()
 
   return <Layout className="form-designer">
-    <Sider className="side-left-panel">
+    <Sider width="260">
       <WidgetPanel />
     </Sider>
     <Layout>

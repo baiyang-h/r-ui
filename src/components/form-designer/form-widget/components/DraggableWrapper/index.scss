@@ -1,4 +1,4 @@
-.drag-wrapper {
+.draggable-wrapper {
   padding: 4px 10px;
   box-sizing: border-box;
   border: 1px dashed transparent;
@@ -9,10 +9,10 @@
     left: 0;
     color: #1890ff;
   }
-  .drag-wrapper--drag-icon {
+  .draggable-wrapper-icon {
     font-size: 16px;
   }
-  .drag-wrapper-icons {
+  .draggable-wrapper-icons {
     position: absolute;
     right: 8px;
     bottom: 0;
@@ -30,6 +30,6 @@
   }
 }
 
-.drag-wrapper--selected {
+.draggable-wrapper--selected {
   border: 1px dashed #409eff;
 }

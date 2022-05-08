@@ -26,13 +26,13 @@ function FormControls() {
 
   const [list, setList] = useState(sourceData);
 
-  return <div className="form-create-controls">
+  return <div className="widget-panel">
     <ReactSortable
-      id="control-items"
+      id="widget-panel-container"
       list={list}
       setList={setList}
       animation={150}
-      group={{ name: "form-create", pull: "clone", put: false }}
+      group={{ name: "form-designer", pull: "clone", put: false }}
       sort={false}
     >
       {list.map(item => (

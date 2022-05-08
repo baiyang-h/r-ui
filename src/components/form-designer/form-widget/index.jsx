@@ -4,10 +4,10 @@ import _, { uniqueId } from 'lodash';
 import './index.scss';
 import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
-import DragWrapper from "./components/DragWrapper"
+import DraggableWrapper from "./components/DraggableWrapper"
 import { sourceData } from '@/components/form-designer/widget-panel'
 
-const Controls = {
+const Widget = {
   text: Text,
   input: Input,
   number: InputNumber,
@@ -117,8 +117,8 @@ function DragFormLayout(props, ref) {
     const wrapperParentNode = to.parentNode
     // 因为在每个 drag-wrapper 上定义了一个data-level属性，level就是相应的层级信息
     const newField = wrapperParentNode.getAttribute('data-field')
-    if(to.className === 'drag-items') {  // 添加到根
-      if(from.id === 'control-items') { // 左侧控件拖拽而来
+    if(to.className === 'widget-draggable') {  // 添加到根
+      if(from.id === 'widget-panel-container') { // 左侧控件拖拽而来
         Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
         setList(_list)
       } else { // 已存在的表单移动（先移除再添加）
@@ -128,9 +128,9 @@ function DragFormLayout(props, ref) {
           setList(_list)
         })
       }
-    } else if(to.className === 'loop-drag-items') { // 添加到嵌套容器
+    } else if(to.className === 'loop-widget-draggable') { // 添加到嵌套容器
       // 此处需判断是从左侧控件处拖拽而来，还是从已有的拖拽表单处拖拽而来
-      if(from.id === 'control-items') {  // 左侧控件拖拽而来
+      if(from.id === 'widget-panel-container') {  // 左侧控件拖拽而来
         Drag.add(_list, newField, newIndex, {...row, id: uniqueId('field_')})
         setList(_list)
       } else {  // 已存在的表单移动（先移除再添加）
@@ -150,12 +150,12 @@ function DragFormLayout(props, ref) {
     const to = evt.to
     const newIndex = evt.newIndex
     const oldIndex = evt.oldIndex
-    if(to.className === 'drag-items') { // 如果是在根部移动的
+    if(to.className === 'widget-draggable') { // 如果是在根部移动的
       const oldItem = _list[oldIndex]
       _list.splice(oldIndex, 1)
       _list.splice(newIndex, 0, oldItem)
       setList(_list)
-    } else if(to.className === 'loop-drag-items') {  // 如果在容器内部移动的
+    } else if(to.className === 'loop-widget-draggable') {  // 如果在容器内部移动的
 
     }
   }
@@ -208,10 +208,10 @@ function DragFormLayout(props, ref) {
     let RenderCom
     if(item.type === 'container') {  // 如果类型是容器
       RenderCom = <ReactSortable
-        className="loop-drag-items"
+        className="loop-widget-draggable"
         animation={150}
-        handle=".drag-wrapper--drag-icon"
-        group={{ name: 'form-create', pull: true, put: true }}
+        handle=".draggable-wrapper-icon"
+        group={{ name: 'form-designer', pull: true, put: true }}
         list={item.children}
         setList={()=>{}}
         onAdd={sortableAdd}
@@ -234,7 +234,7 @@ function DragFormLayout(props, ref) {
         }
       </Row>
     } else { // 其他类型
-      const Com = Controls[item.type.toLowerCase()]
+      const Com = Widget[item.type.toLowerCase()]
       RenderCom = Com ? <Form.Item
         name={item.id}
         label={item.id}
@@ -243,7 +243,7 @@ function DragFormLayout(props, ref) {
       </Form.Item> : <div />
     }
 
-    return <DragWrapper
+    return <DraggableWrapper
       key={_level}
       level={_level}
       field={item.id}
@@ -254,20 +254,20 @@ function DragFormLayout(props, ref) {
       onDelete={() => onDragWrapperDelete(item, index)}
     >
       { RenderCom }
-    </DragWrapper>
+    </DraggableWrapper>
   })
 
-  return <div className="drag-form-layout">
+  return <div className="form-widget">
     <Form
-      className="drag-form"
+      className="form-widget-form"
       form={form}
-      name="drag-form"
+      name="form-widget-form"
     >
       <ReactSortable
-        className="drag-items"
+        className="widget-draggable"
         animation={150}
-        handle=".drag-wrapper--drag-icon"
-        group={{name: "form-create"}}
+        handle=".draggable-wrapper-icon"
+        group={{name: "form-designer"}}
         list={list}
         setList={() => {}}
         onAdd={sortableAdd}

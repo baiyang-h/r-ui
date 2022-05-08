@@ -43,15 +43,15 @@ function DragWrapper(props) {
   }
 
   return <div
-    className={classNames('drag-wrapper', props.selected ? 'drag-wrapper--selected' : false)}
+    className={classNames('draggable-wrapper', props.selected ? 'draggable-wrapper--selected' : false)}
     data-level={props.level}
     data-field={props.field}
     onClick={handleClick}
   >
-    { props.selected &&  <DragOutlined className="drag-wrapper--drag-icon" />}
+    { props.selected &&  <DragOutlined className="draggable-wrapper-icon" />}
     { props.children }
     {
-      props.selected && <div className="drag-wrapper-icons">
+      props.selected && <div className="draggable-wrapper-icons">
         <PlusCircleOutlined onClick={onAdd} />
         <CopyOutlined onClick={onCopy} />
         <DeleteOutlined onClick={onDelete} />

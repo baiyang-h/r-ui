@@ -1,13 +1,13 @@
-.drag-form-layout {
+.form-widget {
   padding: 20px;
   height: 100%;
   box-sizing: border-box;
   background: #fff;
   overflow-y: auto;
 
-  .drag-form {
+  .form-widget-form {
     height: 100%;
-    .drag-items {
+    .widget-draggable {
       min-height: 100%;
       box-sizing: border-box;
       .drag-wrapper {
@@ -17,7 +17,7 @@
     }
   }
 
-  .loop-drag-items {
+  .loop-widget-draggable {
     min-height: 60px;
     display: flex;
     margin-bottom: 24px;
