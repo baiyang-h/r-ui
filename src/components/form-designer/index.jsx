@@ -10,7 +10,24 @@ const { Header, Sider, Content } = Layout;
 
 function FormDesigner() {
 
-  const formDragLayoutRef = useRef()
+  const formWidgetRef = useRef()
+
+  // 预览
+  const onPreview = () => {}
+
+  // 清空
+  const onClear = () => {
+    formWidgetRef.current.clear()
+  }
+
+  // 导入JSON
+  const onImportJson = () => {}
+
+  // 导出JSON
+  const onExportJson = () => {}
+
+  // 导出代码
+  const onExportCode = () => {}
 
   return <Layout className="form-designer">
     <Sider width="260">
@@ -18,10 +35,16 @@ function FormDesigner() {
     </Sider>
     <Layout>
       <Header>
-        <ToolbarPanel />
+        <ToolbarPanel
+          onPreview={onPreview}
+          onClear={onClear}
+          onImportJson={onImportJson}
+          onExportJson={onExportJson}
+          onExportCode={onExportCode}
+        />
       </Header>
       <Content>
-        <FormWidget />
+        <FormWidget ref={formWidgetRef} />
       </Content>
     </Layout>
     {/*<Sider>*/}

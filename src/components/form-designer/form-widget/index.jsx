@@ -5,7 +5,7 @@ import './index.scss';
 import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 import DraggableWrapper from "./components/DraggableWrapper"
-import { sourceData } from '@/components/form-designer/widget-panel'
+import { widgets } from '@/components/form-designer/widget-panel'
 
 const Widget = {
   text: Text,
@@ -22,46 +22,6 @@ const Widget = {
   checkbox: Checkbox,
   checkboxgroup: CheckboxGroup,
   rate: Rate
-}
-
-const Drag = {
-  add(list, newField, newIndex, dic, root=false) {
-    if(root) { // 根部
-      list.splice(newIndex, 0, dic)
-    } else { // 嵌套
-      const loop = (children) => {
-        for(let child of children) {
-          if(child.id === newField) {
-            return child.children.splice(newIndex, 0, dic)
-          }
-          if(child.children) {
-            loop(child.children)
-          }
-        }
-      }
-      loop(list)
-    }
-  },
-  remove(list, level, oldIndex) {
-    const levelList = level.split('-')
-    let len = levelList.length
-    if(len>1) { // 嵌套删除
-      let index = 0
-      let children = list
-      while (len-index>1) {
-        children = children[levelList[index]].children
-        index++
-      }
-      const removeRow = children[oldIndex]
-      // 为了让删除后数组不塌陷，所以补充一个null做支撑，最后全都处理完后，将其过滤
-      children.splice(oldIndex, 1)
-      return removeRow
-    } else { // 根部删除
-      const removeRow = list[oldIndex]
-      list.splice(oldIndex, 1)
-      return removeRow
-    }
-  }
 }
 
 const getParentChildren = (list, field) => {
@@ -84,7 +44,40 @@ const getParentChildren = (list, field) => {
   return parentList
 }
 
-function DragFormLayout(props, ref) {
+const Drag = {
+  /**
+   * 添加方法
+   * @param list      传入的整个数据
+   * @param newField  要添加到的容器的 field， 如果是添加到根部，则不需要field，可以写任何值，可写null
+   * @param newIndex  添加到新位置的索引
+   * @param dic       添加控件的信息
+   * @param root      是否是根部，true是，false不是
+   */
+  add(list, newField, newIndex, dic, root=false) {
+    if(root) { // 根部
+      list.splice(newIndex, 0, dic)
+    } else { // 嵌套
+      const loop = (children) => {
+        for(let child of children) {
+          if(child.id === newField) {
+            return child.children.splice(newIndex, 0, dic)
+          }
+          if(child.children) {
+            loop(child.children)
+          }
+        }
+      }
+      loop(list)
+    }
+  },
+  remove(list, oldField) {
+    const children = getParentChildren(list, oldField)
+    const index = children.findIndex(child => child.id === oldField)
+    children.splice(index, 1)
+  }
+}
+
+function FormWidget(props, ref) {
 
   const [list, setList] = useState([]);
   const [selected, setSelected] = useState(undefined)
@@ -104,9 +97,9 @@ function DragFormLayout(props, ref) {
     const _list = _.cloneDeep(list)
     // 获取控件类型信息
     const type = evt.clone.getAttribute('data-type')
-    const row = sourceData.find(item => item.type === type)
+    const row = widgets.find(item => item.type === type)
 
-    // 拖拽到的位置索引
+    // 拖拽时的位置索引
     const newIndex = evt.newIndex
     const oldIndex = evt.oldIndex
     // 添加，1.从表单控件拖拽添加。 2.从已有的嵌套内部拖动添加
@@ -122,7 +115,8 @@ function DragFormLayout(props, ref) {
         Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
         setList(_list)
       } else { // 已存在的表单移动（先移除再添加）
-        const oldRow = Drag.remove(_list, oldLevel, oldIndex)
+        const oldField = clone.getAttribute('data-field')
+        const oldRow = Drag.remove(_list, oldField)
         Drag.add(_list, null, newIndex, oldRow, true)
         Promise.resolve().then(()=> {
           setList(_list)
@@ -134,7 +128,8 @@ function DragFormLayout(props, ref) {
         Drag.add(_list, newField, newIndex, {...row, id: uniqueId('field_')})
         setList(_list)
       } else {  // 已存在的表单移动（先移除再添加）
-        const oldRow = Drag.remove(_list, oldLevel, oldIndex)
+        const oldField = clone.getAttribute('data-field')
+        const oldRow = Drag.remove(_list, oldField)
         Drag.add(_list, newField, newIndex, oldRow)
         Promise.resolve().then(()=> {
           setList(_list)
@@ -279,4 +274,4 @@ function DragFormLayout(props, ref) {
   </div>
 }
 
-export default React.forwardRef(DragFormLayout)
+export default React.forwardRef(FormWidget)

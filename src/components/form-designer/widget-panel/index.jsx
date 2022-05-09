@@ -2,7 +2,7 @@ import { ReactSortable } from "react-sortablejs";
 import './index.scss'
 import {useState} from "react";
 
-export const sourceData = [
+export const widgets = [
   { type: 'text', name: '文本', attr: {} },
   { type: 'input', name: '输入框', attr: {} },
   { type: 'number', name: '数字输入框', attr: {} },
@@ -24,7 +24,7 @@ export const sourceData = [
 
 function FormControls() {
 
-  const [list, setList] = useState(sourceData);
+  const [list, setList] = useState(widgets);
 
   return <div className="widget-panel">
     <ReactSortable
