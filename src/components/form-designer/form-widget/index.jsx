@@ -37,7 +37,7 @@ export default class FormWidget extends React.Component {
   // 添加
   sortableAdd = (evt) => {
     console.log('Add', evt)
-    const list = this.state.list
+    const list = _.cloneDeep(this.state.list)
     // 两种情况，1. 左侧控件（拖拽新增）， 2. 已经存在的控件移动
     const clone = evt.clone
 
@@ -64,10 +64,9 @@ export default class FormWidget extends React.Component {
         // 添加拖拽元素
         _list = itemAdd(_list, newPath, cloneRow)
         // 更新视图
-        // this.setState({
-        //   list: _list
-        // })
-        console.log(_list)
+        this.setState({
+          list: _list
+        })
       } else {
         // 此处是先新增再删除
         // 添加拖拽元素
