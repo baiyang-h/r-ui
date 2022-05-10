@@ -95,18 +95,30 @@ function FormWidget(props, ref) {
   // 添加
   function sortableAdd(evt) {
     console.log('Add', evt)
+    const to = evt.to
+    const clone = evt.clone
+    const from = evt.from
+
+    // 组件层级
+    const level = evt.clone.getAttribute('data-level');
+    // 父节点层级
+    const parentLevel = evt.path[1].getAttribute('data-level');
+
+    // 拖拽时的位置索引
+    const newIndex = evt.newIndex
+    const oldIndex = evt.oldIndex
+
+    // 新路径 为根节点时直接使用index
+    const newPath = parentLevel ? `${parentLevel}-${newIndex}` : newIndex;
+
+    return
     const _list = _.cloneDeep(list)
     // 获取控件类型信息
     const type = evt.clone.getAttribute('data-type')
     const row = widgets.find(item => item.type === type)
 
-    // 拖拽时的位置索引
-    const newIndex = evt.newIndex
-    const oldIndex = evt.oldIndex
     // 添加，1.从表单控件拖拽添加。 2.从已有的嵌套内部拖动添加
-    const to = evt.to
-    const clone = evt.clone
-    const from = evt.from
+
     const oldLevel = clone.getAttribute('data-level')
     if(to.className === 'widget-draggable') {  // 添加到根
       if(from.id === 'widget-panel-container') { // 左侧控件拖拽而来
