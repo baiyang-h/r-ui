@@ -73,7 +73,8 @@ const Drag = {
   remove(list, oldField) {
     const children = getParentChildren(list, oldField)
     const index = children.findIndex(child => child.id === oldField)
-    children.splice(index, 1)
+    const row = children.splice(index, 1)
+    return row[0]
   }
 }
 
@@ -107,9 +108,6 @@ function FormWidget(props, ref) {
     const clone = evt.clone
     const from = evt.from
     const oldLevel = clone.getAttribute('data-level')
-    const wrapperParentNode = to.parentNode
-    // 因为在每个 drag-wrapper 上定义了一个data-level属性，level就是相应的层级信息
-    const newField = wrapperParentNode.getAttribute('data-field')
     if(to.className === 'widget-draggable') {  // 添加到根
       if(from.id === 'widget-panel-container') { // 左侧控件拖拽而来
         Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
@@ -123,6 +121,8 @@ function FormWidget(props, ref) {
         })
       }
     } else if(to.className === 'loop-widget-draggable') { // 添加到嵌套容器
+      const wrapperParentNode = to.parentNode
+      const newField = wrapperParentNode.getAttribute('data-field')
       // 此处需判断是从左侧控件处拖拽而来，还是从已有的拖拽表单处拖拽而来
       if(from.id === 'widget-panel-container') {  // 左侧控件拖拽而来
         Drag.add(_list, newField, newIndex, {...row, id: uniqueId('field_')})

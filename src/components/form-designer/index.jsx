@@ -35,13 +35,13 @@ function FormDesigner() {
     </Sider>
     <Layout>
       <Header>
-        <ToolbarPanel
-          onPreview={onPreview}
-          onClear={onClear}
-          onImportJson={onImportJson}
-          onExportJson={onExportJson}
-          onExportCode={onExportCode}
-        />
+        {/*<ToolbarPanel*/}
+        {/*  onPreview={onPreview}*/}
+        {/*  onClear={onClear}*/}
+        {/*  onImportJson={onImportJson}*/}
+        {/*  onExportJson={onExportJson}*/}
+        {/*  onExportCode={onExportCode}*/}
+        {/*/>*/}
       </Header>
       <Content>
         <FormWidget ref={formWidgetRef} />
