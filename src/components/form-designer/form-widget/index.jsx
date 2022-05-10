@@ -6,6 +6,7 @@ import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 import DraggableWrapper from "./components/DraggableWrapper"
 import { widgets } from '@/components/form-designer/widget-panel'
+import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove} from '../utils'
 
 const Widget = {
   text: Text,
@@ -95,58 +96,59 @@ function FormWidget(props, ref) {
   // 添加
   function sortableAdd(evt) {
     console.log('Add', evt)
-    const to = evt.to
+    // 两种情况，1. 左侧控件（拖拽新增）， 2. 已经存在的控件移动
     const clone = evt.clone
-    const from = evt.from
 
-    // 组件层级
-    const level = evt.clone.getAttribute('data-level');
+    // 组件层级, 1. 如果null 则表示左侧控件新增， 2. 有层级就是已经存在的控件进行移动
+    const path = evt.clone.getAttribute('data-path');
     // 父节点层级
-    const parentLevel = evt.path[1].getAttribute('data-level');
+    const parentPath = evt.path[1].getAttribute('data-path');
 
     // 拖拽时的位置索引
     const newIndex = evt.newIndex
-    const oldIndex = evt.oldIndex
-
     // 新路径 为根节点时直接使用index
-    const newPath = parentLevel ? `${parentLevel}-${newIndex}` : newIndex;
-
-    return
-    const _list = _.cloneDeep(list)
-    // 获取控件类型信息
-    const type = evt.clone.getAttribute('data-type')
-    const row = widgets.find(item => item.type === type)
-
-    // 添加，1.从表单控件拖拽添加。 2.从已有的嵌套内部拖动添加
-
-    const oldLevel = clone.getAttribute('data-level')
-    if(to.className === 'widget-draggable') {  // 添加到根
-      if(from.id === 'widget-panel-container') { // 左侧控件拖拽而来
-        Drag.add(_list, null, newIndex, {...row, id: uniqueId('field_')}, true)
-        setList(_list)
-      } else { // 已存在的表单移动（先移除再添加）
-        const oldField = clone.getAttribute('data-field')
-        const oldRow = Drag.remove(_list, oldField)
-        Drag.add(_list, null, newIndex, oldRow, true)
-        Promise.resolve().then(()=> {
-          setList(_list)
+    const newPath = parentPath ? `${parentPath}-${newIndex}` : newIndex;
+    // 判断是否为路径 true表示已有控件执行移动，false表示左侧拖拽新增
+    if(isPath(path)) {
+      // 旧的路径index
+      const oldPath = path;
+      // 获取克隆要移动的元素的信息
+      const cloneRow = getCloneItem(list, oldPath)
+      // 比较路径的上下位置 先执行靠下的数据 再执行考上数据, 这里两个数组做对比，他会根据数组的第一个索引值进行大小比较  [1, 2]  [4, 2, 1]   后者4>1 表示后者在下
+      if(indexToArray(oldPath) > indexToArray(newPath)) {
+        // 先删除再新增
+        // 删除元素 获得新数据
+        let _list = itemRemove(list, oldPath);
+        // 添加拖拽元素
+        _list = itemAdd(_list, newPath, cloneRow)
+        // 更新视图
+        return Promise.resolve().then(() =>{
+          setList(_.cloneDeep(_list))
+        })
+      } else {
+        // 此处是先新增再删除
+        // 添加拖拽元素
+        let _list = itemAdd(list, newPath, cloneRow)
+        // 删除元素 获得新数据
+        _list = itemRemove(_list, oldPath);
+        // 更新视图
+        return Promise.resolve().then(() =>{
+          setList(_.cloneDeep(_list))
         })
       }
-    } else if(to.className === 'loop-widget-draggable') { // 添加到嵌套容器
-      const wrapperParentNode = to.parentNode
-      const newField = wrapperParentNode.getAttribute('data-field')
-      // 此处需判断是从左侧控件处拖拽而来，还是从已有的拖拽表单处拖拽而来
-      if(from.id === 'widget-panel-container') {  // 左侧控件拖拽而来
-        Drag.add(_list, newField, newIndex, {...row, id: uniqueId('field_')})
-        setList(_list)
-      } else {  // 已存在的表单移动（先移除再添加）
-        const oldField = clone.getAttribute('data-field')
-        const oldRow = Drag.remove(_list, oldField)
-        Drag.add(_list, newField, newIndex, oldRow)
-        Promise.resolve().then(()=> {
-          setList(_list)
-        })
+    } else {
+      // 新增流程 创建元素 => 插入元素 => 更新视图
+      // 获取控件类型信息
+      const type = clone.getAttribute('data-type')
+      const row = _.cloneDeep(widgets.find(item => item.type === type))
+      // 为容器时增加子元素
+      if(row.type === 'container') {
+        row.children = []
       }
+      const _list = itemAdd(list, newPath, row)
+      Promise.resolve().then(() =>{
+        setList(_.cloneDeep(_list))
+      })
     }
   }
 
@@ -208,9 +210,9 @@ function FormWidget(props, ref) {
     setList(_list)
   }
 
-  const loop = (arr=[], level='') => arr.map((item, index) => {
+  const loop = (arr=[], path='') => arr.map((item, index) => {
     // 层级 例：0-1  1-1-1
-    let _level = level==='' ? index + '' : `${level}-${index}`
+    let _path = path==='' ? index + '' : `${path}-${index}`
 
     let RenderCom
     if(item.type === 'container') {  // 如果类型是容器
@@ -224,7 +226,7 @@ function FormWidget(props, ref) {
         onAdd={sortableAdd}
         onUpdate={sortableUpdate}
       >
-        {loop(item.children, _level)}
+        {loop(item.children, _path)}
       </ReactSortable>
     } else if(item.type === 'grid') {  // 如果类型是栅格
       RenderCom = <Row
@@ -251,8 +253,8 @@ function FormWidget(props, ref) {
     }
 
     return <DraggableWrapper
-      key={_level}
-      level={_level}
+      key={_path}
+      path={_path}
       field={item.id}
       selected={selected === item.id}
       onClick={() => onDragWrapperClick(item, index)}

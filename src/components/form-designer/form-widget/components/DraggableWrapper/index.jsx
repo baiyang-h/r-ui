@@ -6,7 +6,7 @@ import { DeleteOutlined, CopyOutlined, DragOutlined, PlusCircleOutlined } from '
 DragWrapper.propTypes = {
   // 是否被选中
   selected: PropTypes.bool,
-  level: PropTypes.string,
+  path: PropTypes.string,
   field: PropTypes.string,
   onClick: PropTypes.func,
   onCopy: PropTypes.func,
@@ -15,7 +15,7 @@ DragWrapper.propTypes = {
 
 DragWrapper.defaultProps = {
   selected: false,
-  level: '0',
+  path: '0',
 }
 
 function DragWrapper(props) {
@@ -44,7 +44,7 @@ function DragWrapper(props) {
 
   return <div
     className={classNames('draggable-wrapper', props.selected ? 'draggable-wrapper--selected' : false)}
-    data-level={props.level}
+    data-path={props.path}
     data-field={props.field}
     onClick={handleClick}
   >
