@@ -49,14 +49,13 @@ export default class FormWidget extends React.Component {
     // 拖拽时的位置索引
     const newIndex = evt.newIndex
     // 新路径 为根节点时直接使用index
-    const newPath = parentPath ? `${parentPath}-${newIndex}` : newIndex;
+    const newPath = parentPath ? `${parentPath}-${newIndex}` : newIndex+'';
     // 判断是否为路径 true表示已有控件执行移动，false表示左侧拖拽新增
     if(isPath(path)) {
       // 旧的路径index
       const oldPath = path;
       // 获取克隆要移动的元素的信息
       const cloneRow = getCloneItem(list, oldPath)
-      cloneRow.id = uniqueId('field_')
       // 比较路径的上下位置 先执行靠下的数据 再执行考上数据, 这里两个数组做对比，他会根据数组的第一个索引值进行大小比较  [1, 2]  [4, 2, 1]   后者4>1 表示后者在下
       if(indexToArray(oldPath) > indexToArray(newPath)) {
         // 先删除再新增
@@ -76,10 +75,9 @@ export default class FormWidget extends React.Component {
         // 删除元素 获得新数据
         _list = itemRemove(_list, oldPath);
         // 更新视图
-        // this.setState({
-        //   list: _list
-        // })
-        console.log(_list)
+        this.setState({
+          list: _list
+        })
       }
     } else {
       // 新增流程 创建元素 => 插入元素 => 更新视图
