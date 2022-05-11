@@ -64,8 +64,10 @@ export default class FormWidget extends React.Component {
         // 添加拖拽元素
         _list = itemAdd(_list, newPath, cloneRow)
         // 更新视图
-        this.setState({
-          list: _list
+        Promise.resolve().then(() => {
+          this.setState({
+            list: _list
+          })
         })
       } else {
         // 此处是先新增再删除
@@ -73,9 +75,12 @@ export default class FormWidget extends React.Component {
         let _list = itemAdd(list, newPath, cloneRow)
         // 删除元素 获得新数据
         _list = itemRemove(_list, oldPath);
+        console.log(_list)
         // 更新视图
-        this.setState({
-          list: _list
+        Promise.resolve().then(() => {
+          this.setState({
+            list: _list
+          })
         })
       }
     } else {
@@ -90,8 +95,10 @@ export default class FormWidget extends React.Component {
       }
       const _list = itemAdd(list, newPath, row)
       // 更新视图
-      this.setState({
-        list: _list
+      Promise.resolve().then(() => {
+        this.setState({
+          list: _list
+        })
       })
     }
   }
