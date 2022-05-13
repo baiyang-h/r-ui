@@ -6,7 +6,7 @@ import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 import DraggableWrapper from "./components/DraggableWrapper"
 import { widgets } from '@/components/form-designer/widget-panel'
-import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove} from '../utils'
+import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove, getParent} from '../utils'
 
 const Widget = {
   text: Text,
@@ -75,7 +75,6 @@ export default class FormWidget extends React.Component {
         let _list = itemAdd(list, newPath, cloneRow)
         // 删除元素 获得新数据
         _list = itemRemove(_list, oldPath);
-        console.log(_list)
         // 更新视图
         Promise.resolve().then(() => {
           this.setState({
@@ -117,7 +116,27 @@ export default class FormWidget extends React.Component {
 
   // 容器拷贝（无关数据）
   onDragWrapperAdd = (item, index) => {
-
+    const _list = _.cloneDeep(this.state.list)
+    const parentItem = getParent(_list, item.id)
+    const children = parentItem ? parentItem.children : _list
+    // 因为是要拷贝一份，我们就需要对item进行初始化，回到最初始值，并且像id这种key应该是一个新得唯一值
+    const _item = _.cloneDeep(item)
+    _item.id = uniqueId('field_')
+    if(_item.children) {
+      const loop = (children) => {
+        children.forEach(child => {
+          child.id = uniqueId('field_')
+          if(child.children) {
+            loop(child.children)
+          }
+        })
+      }
+      loop(_item.children)
+    }
+    children.splice(index+1, 0, _item)
+    this.setState({
+      list: _list
+    })
   }
 
   // 容器拷贝（包括数据）
