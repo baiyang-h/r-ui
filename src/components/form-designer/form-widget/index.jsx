@@ -1,12 +1,13 @@
 import React from 'react'
 import { ReactSortable } from "react-sortablejs";
+import update from 'immutability-helper';
 import _, { uniqueId } from 'lodash';
 import './index.scss';
 import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 import DraggableWrapper from "./components/DraggableWrapper"
 import { widgets } from '@/components/form-designer/widget-panel'
-import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove, getParent} from '../utils'
+import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove, getParent, _getParent} from '../utils'
 
 const Widget = {
   text: Text,
@@ -105,6 +106,20 @@ export default class FormWidget extends React.Component {
   // 移动
   sortableUpdate = (evt) => {
     console.log('Update', evt)
+    const { newIndex, oldIndex } = evt
+    // 父节点层级, 如果是根的话则没有父级路径，即null
+    const parentPath = evt.path[1].getAttribute('data-path');
+    // 父元素list
+    let parent = parentPath ? _getParent(this.state.list, parentPath).children : this.state.list
+    // 当前拖拽元素
+    const dragItem = parent[oldIndex];
+    // 更新后的父节点
+    parent = update(parent, {
+      $splice: [
+        [oldIndex, 1],
+        [newIndex, 0, dragItem],
+      ]
+    })
   }
 
   // 选择拖拽容器

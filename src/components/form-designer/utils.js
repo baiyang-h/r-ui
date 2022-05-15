@@ -41,7 +41,7 @@ export const getCloneItem = (list, pathOrIndex) => {
  * @param pathOrIndex    可能是1 直接索引（一般是根部的情况）， 也可能是 1-1-1（嵌套的情况）
  * @returns 返回一个相应层级的item信息，  即1-1  会返回索引 1-1  的这个item值，如果是根部则返回null
  */
-const _getParent = (list, pathOrIndex) => {
+export const _getParent = (list, pathOrIndex) => {
   const arr = indexToArray(pathOrIndex)
   // 嵌套节点删除
   let parent;
