@@ -92,6 +92,46 @@ export const getParent = (list, id) => {
 }
 
 /**
+ * 求数组中相应id的数据
+ * @param children 一开始 传入 list
+ * @param id
+ * @returns {*}
+ */
+export const getItem = (children, id) => {
+  for(let item of children) {
+    if(item.id === id) {
+      return item
+    }
+    if(item.children) {
+      const row = getItem(item.children, id)
+      if(row) return row
+    }
+  }
+}
+
+/**
+ * 将改变过的children插入到相应的item中，并且返回修改过的list
+ * @param list
+ * @param pathOrIndex   1-1-1, 1 等层级字符串
+ * @param children   找到相应层级的item，修改其 children
+ * @returns {*}
+ */
+export const setInfo = (list, pathOrIndex, children) => {
+  const arr = indexToArray(pathOrIndex)
+  list = _.cloneDeep(list);
+  let parent;
+  arr.forEach((item, index) => {
+    if (index === 0) {
+      parent = list[item]
+    } else {
+      parent = parent.children[item]
+    }
+  })
+  parent.children = children
+  return list
+}
+
+/**
  * 根据路径删除数据
  * @param {*} list
  * @param {*} pathOrIndex

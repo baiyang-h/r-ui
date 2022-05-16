@@ -7,7 +7,7 @@ import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 import DraggableWrapper from "./components/DraggableWrapper"
 import { widgets } from '@/components/form-designer/widget-panel'
-import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove, getParent, _getParent} from '../utils'
+import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove, getParent, _getParent, setInfo} from '../utils'
 
 const Widget = {
   text: Text,
@@ -119,6 +119,11 @@ export default class FormWidget extends React.Component {
         [oldIndex, 1],
         [newIndex, 0, dragItem],
       ]
+    })
+    // 最新的数据 根节点时直接调用data
+    const _list = parentPath ? setInfo(this.state.list, parentPath, parent) :parent
+    this.setState({
+      list: _list
     })
   }
 
