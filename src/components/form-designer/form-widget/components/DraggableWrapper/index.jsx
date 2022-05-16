@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import classNames from "classnames";
 import './index.scss'
-import { DeleteOutlined, CopyOutlined, DragOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { DeleteOutlined, CopyOutlined, DragOutlined, PlusCircleOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons'
 
 DragWrapper.propTypes = {
   // 是否被选中
@@ -11,6 +11,8 @@ DragWrapper.propTypes = {
   onClick: PropTypes.func,
   onCopy: PropTypes.func,
   onDelete: PropTypes.func,
+  onUp: PropTypes.func,
+  onDown: PropTypes.func,
 }
 
 DragWrapper.defaultProps = {
@@ -25,6 +27,14 @@ function DragWrapper(props) {
     e.preventDefault()
     e.stopPropagation()
     props.onClick && props.onClick()
+  }
+
+  const onUp = () => {
+    props.onUp && props.onUp()
+  }
+
+  const onDown = () => {
+    props.onDown && props.onDown()
   }
 
   // 拷贝（不包括数据）
@@ -52,6 +62,8 @@ function DragWrapper(props) {
     { props.children }
     {
       props.selected && <div className="draggable-wrapper-icons">
+        <ArrowUpOutlined onClick={onUp} />
+        <ArrowDownOutlined onClick={onDown} />
         <PlusCircleOutlined onClick={onAdd} />
         <CopyOutlined onClick={onCopy} />
         <DeleteOutlined onClick={onDelete} />

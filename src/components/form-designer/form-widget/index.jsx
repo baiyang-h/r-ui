@@ -7,7 +7,16 @@ import { Form, Row, Col } from 'antd';
 import { Text, Input, InputNumber, Select, TimePicker, DatePicker, Cascader, TreeSelect, Switch, Slider, RadioGroup, Checkbox, CheckboxGroup, Rate } from '@/packages/form/components'
 import DraggableWrapper from "./components/DraggableWrapper"
 import { widgets } from '@/components/form-designer/widget-panel'
-import {getCloneItem, isPath, itemAdd, indexToArray, itemRemove, getParent, _getParent, setInfo} from '../utils'
+import {
+  getCloneItem,
+  isPath,
+  itemAdd,
+  indexToArray,
+  itemRemove,
+  getParent,
+  setInfo,
+  getItem
+} from '../utils'
 
 const Widget = {
   text: Text,
@@ -109,8 +118,9 @@ export default class FormWidget extends React.Component {
     const { newIndex, oldIndex } = evt
     // 父节点层级, 如果是根的话则没有父级路径，即null
     const parentPath = evt.path[1].getAttribute('data-path');
+    const parentItem = getItem(this.state.list, parentPath)
     // 父元素list
-    let parent = parentPath ? _getParent(this.state.list, parentPath).children : this.state.list
+    let parent = parentPath && parentItem ? parentItem.children : this.state.list
     // 当前拖拽元素
     const dragItem = parent[oldIndex];
     // 更新后的父节点
@@ -131,6 +141,53 @@ export default class FormWidget extends React.Component {
   onDragWrapperClick = (item) => {
     this.setState({
       selected: item.id
+    })
+  }
+
+  // 往上移动
+  onDragWrapperUp = (item, index) => {
+    if(index === 0) return false
+    let _list = _.cloneDeep(this.state.list)
+    let parent = getParent(_list, item.id)
+    let children = parent ? parent.children : _list
+    const row = children[index]
+    children = update(children, {
+      $splice: [
+        [index, 1],
+        [index-1, 0, row],
+      ]
+    })
+    if(parent) {
+      parent.children = children
+    } else {
+      _list = children
+    }
+    this.setState({
+      list: _list
+    })
+  }
+
+  // 往下移动
+  onDragWrapperDown = (item, index) => {
+    let _list = _.cloneDeep(this.state.list)
+    let parent = getParent(_list, item.id)
+    let children = parent ? parent.children : _list
+    let lastIndex = children.length
+    if(index+1>=lastIndex) return
+    const row = children[index]
+    children = update(children, {
+      $splice: [
+        [index, 1],
+        [index+1, 0, row],
+      ]
+    })
+    if(parent) {
+      parent.children = children
+    } else {
+      _list = children
+    }
+    this.setState({
+      list: _list
     })
   }
 
@@ -161,12 +218,36 @@ export default class FormWidget extends React.Component {
 
   // 容器拷贝（包括数据）
   onDragWrapperCopy = (item, index) => {
-
+    const _list = _.cloneDeep(this.state.list)
+    const parentItem = getParent(_list, item.id)
+    const children = parentItem ? parentItem.children : _list
+    // 因为是要拷贝一份，我们就需要对item进行初始化，回到最初始值，并且像id这种key应该是一个新得唯一值
+    const _item = _.cloneDeep(item)
+    _item.id = uniqueId('field_')
+    if(_item.children) {
+      const loop = (children) => {
+        children.forEach(child => {
+          child.id = uniqueId('field_')
+          if(child.children) {
+            loop(child.children)
+          }
+        })
+      }
+      loop(_item.children)
+    }
+    children.splice(index+1, 0, _item)
+    this.setState({
+      list: _list
+    })
   }
 
   // 容器删除
-  onDragWrapperDelete = (item, index) =>{
-
+  onDragWrapperDelete = (item, path) =>{
+    // 删除元素 获得新数据
+    let _list = itemRemove(this.state.list, path);
+    this.setState({
+      list: _list
+    })
   }
 
   render() {
@@ -221,9 +302,11 @@ export default class FormWidget extends React.Component {
         field={item.id}
         selected={selected === item.id}
         onClick={() => this.onDragWrapperClick(item, index)}
+        onUp={() => this.onDragWrapperUp(item, index)}
+        onDown={() => this.onDragWrapperDown(item, index)}
         onAdd={() => this.onDragWrapperAdd(item, index)}
         onCopy={() => this.onDragWrapperCopy(item, index)}
-        onDelete={() => this.onDragWrapperDelete(item, index)}
+        onDelete={() => this.onDragWrapperDelete(item, _path)}
       >
         { RenderCom }
       </DraggableWrapper>

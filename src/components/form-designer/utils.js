@@ -7,9 +7,9 @@ import _ from 'lodash'
  */
 export const indexToArray = pathStr => `${pathStr}`.split('-').map(n => +n);
 
-export const isPath = pathIndex => {
+export const isPath = pathOrIndex => {
   let result = true
-  indexToArray(pathIndex).forEach(item => {
+  indexToArray(pathOrIndex).forEach(item => {
     if (isNaN(item)) {
       result = false
       return false
@@ -97,16 +97,37 @@ export const getParent = (list, id) => {
  * @param id
  * @returns {*}
  */
-export const getItem = (children, id) => {
+export const _getItem = (children, id) => {
   for(let item of children) {
     if(item.id === id) {
       return item
     }
     if(item.children) {
-      const row = getItem(item.children, id)
+      const row = _getItem(item.children, id)
       if(row) return row
     }
   }
+}
+
+/**
+ * 根据下标获取父节点
+ * @param list
+ * @param pathOrIndex
+ * @return 返回相应的item
+ */
+export const getItem = (list, pathOrIndex) => {
+  const arr = indexToArray(pathOrIndex)
+  // 嵌套节点删除
+  let parent;
+  if (arr.length === 0) return parent
+  arr.forEach((item, index) => {
+    if (index === 0) {
+      parent = list[item]
+    } else {
+      parent = parent.children[item]
+    }
+  })
+  return parent
 }
 
 /**
